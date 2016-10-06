@@ -1,0 +1,26 @@
+{
+    "name": "vocento/microservice-bundle",
+    "type": "bundle",
+    "license": "proprietary",
+    "description": "Base bundle for Microservice projects",
+    "keywords": [
+        "bundle",
+        "microservice"
+    ],
+    "authors": [
+        {
+            "name": "Ariel Ferrandini",
+            "email": "aferrandini@vocento.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Vocento\\MicroserviceBundle\\": "src/Vocento/MicroserviceBundle" }
+    },
+    "require": {
+        "symfony/symfony": "3.1.*"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^3.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^1.0"
+    }
+}

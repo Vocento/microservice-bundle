@@ -1,0 +1,23 @@
+services:
+    vocento.microservice.check_request_id_or_create.listener:
+        class: Vocento\MicroserviceBundle\Listeners\CheckRequestHeadersListener
+        arguments:
+            - '%microservice.name%'
+            - '%microservice.versions.current%'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request,  method: onKernelRequest, priority: 128 }
+
+    vocento.microservice.exception.listener:
+        class: Vocento\MicroserviceBundle\Listeners\ExceptionListener
+        arguments:
+            - false
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception,  method: onKernelException, priority: 128 }
+
+    vocento.microservice.set_response_request_id_header.listener:
+        class: Vocento\MicroserviceBundle\Listeners\SetResponseHeadersListener
+        arguments:
+            - '%microservice.name%'
+            - '%microservice.versions.current%'
+        tags:
+            - { name: kernel.event_listener, event: kernel.response,  method: onKernelResponse, priority: 128 }

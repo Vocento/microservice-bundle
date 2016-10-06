@@ -1,0 +1,17 @@
+microservice.name:
+    path: '/api/service/name.{_format}'
+    defaults: { _controller: 'vocento.microservice.controller:nameAction' }
+    requirements:
+        _format: 'json'
+
+microservice.versions.list:
+    path: '/api/service/versions.{_format}'
+    defaults: { _controller: 'vocento.microservice.controller:versionsAction' }
+    requirements:
+        _format: 'json'
+
+microservice.versions.current:
+    path: '/api/service/versions/current.{_format}'
+    defaults: { _controller: 'vocento.microservice.controller:currentVersionAction' }
+    requirements:
+        _format: 'json'
