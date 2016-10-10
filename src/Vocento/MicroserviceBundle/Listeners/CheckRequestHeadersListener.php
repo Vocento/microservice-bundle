@@ -11,8 +11,8 @@
 
 namespace Vocento\MicroserviceBundle\Listeners;
 
-use AppBundle\RequestId;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Vocento\RequestId;
 
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>

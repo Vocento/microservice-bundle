@@ -17,7 +17,8 @@
         "psr-4": { "Vocento\\MicroserviceBundle\\": "src/Vocento/MicroserviceBundle" }
     },
     "require": {
-        "symfony/symfony": "3.1.*"
+        "symfony/symfony": "3.1.*",
+        "vocento/request-id": "^1.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^3.0",
