@@ -12,6 +12,7 @@
 namespace Vocento\MicroserviceBundle\Listeners;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Vocento\RequestId;
 
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>
