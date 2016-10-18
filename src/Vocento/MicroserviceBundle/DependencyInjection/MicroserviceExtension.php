@@ -55,7 +55,8 @@ class MicroserviceExtension implements ExtensionInterface
         $config['versions']['list'] = $this->sortVersions($config['versions']['list']);
 
         $container->setParameter('microservice.name', $config['name']);
-        $container->setParameter('microservice.versions.current',$this->getCurrentVersion($config['versions']['current'], $config['versions']['list']));
+        $container->setParameter('microservice.debug', ($config['debug'] ? true : false));
+        $container->setParameter('microservice.versions.current', $this->getCurrentVersion($config['versions']['current'], $config['versions']['list']));
         $container->setParameter('microservice.versions.list', $this->sortVersions($config['versions']['list']));
     }
 
@@ -77,13 +78,16 @@ class MicroserviceExtension implements ExtensionInterface
      */
     private function sortVersions(array $versions)
     {
-        usort($versions, function ($version1, $version2) {
-            if ($version1 === $version2) {
-                return 0;
-            }
+        usort(
+            $versions,
+            function ($version1, $version2) {
+                if ($version1 === $version2) {
+                    return 0;
+                }
 
-            return version_compare($version1, $version2, '<') ? -1 : 1;
-        });
+                return version_compare($version1, $version2, '<') ? -1 : 1;
+            }
+        );
 
         return $versions;
     }

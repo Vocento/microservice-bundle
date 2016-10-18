@@ -34,6 +34,10 @@ class Configuration implements ConfigurationInterface
                     ->info('Service name')
                     ->isRequired()
                 ->end()
+                ->booleanNode('debug')
+                    ->info('Enable debug mode')
+                    ->defaultFalse()
+                ->end()
             ->end()
         ;
 
