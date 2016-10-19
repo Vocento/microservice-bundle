@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>
  */
-class MicroserviceController
+class ServiceController extends AbstractController
 {
     /** @var string */
     private $serviceName;
@@ -24,20 +24,19 @@ class MicroserviceController
     /** @var array */
     private $versions;
 
-    /** @var string */
-    private $currentVersion;
-
     /**
      * MicroserviceController constructor.
-     * @param $serviceName
+     *
+     * @param string $serviceName
      * @param array $versions
-     * @param $currentVersion
+     * @param string $currentVersion
      */
     public function __construct($serviceName, array $versions, $currentVersion)
     {
+        parent::__construct($currentVersion);
+
         $this->serviceName = $serviceName;
         $this->versions = $versions;
-        $this->currentVersion = $currentVersion;
     }
 
     /**
@@ -53,7 +52,7 @@ class MicroserviceController
      */
     public function currentVersionAction()
     {
-        return new JsonResponse(array('version' => $this->currentVersion));
+        return new JsonResponse(array('version' => $this->getVersion()));
     }
 
     /**
@@ -61,6 +60,6 @@ class MicroserviceController
      */
     public function versionsAction()
     {
-        return new JsonResponse(array('versions' => $this->versions, 'current' => $this->currentVersion));
+        return new JsonResponse(array('versions' => $this->versions, 'current' => $this->getVersion()));
     }
 }

@@ -35,7 +35,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         }
 
         // Check controller exists
-        $this->assertContainerBuilderHasService('vocento.microservice.controller');
+        $this->assertContainerBuilderHasService('vocento.service.controller');
 
         // Check listeners exist
         $this->assertContainerBuilderHasService('vocento.microservice.check_request_id_or_create.listener');

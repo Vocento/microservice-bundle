@@ -1,17 +1,17 @@
 service.name:
     path: '/service/name.{_format}'
-    defaults: { _controller: 'vocento.microservice.controller:nameAction' }
+    defaults: { _controller: 'vocento.service.controller:nameAction' }
     requirements:
         _format: 'json'
 
 service.versions.list:
     path: '/service/versions.{_format}'
-    defaults: { _controller: 'vocento.microservice.controller:versionsAction' }
+    defaults: { _controller: 'vocento.service.controller:versionsAction' }
     requirements:
         _format: 'json'
 
 service.versions.current:
     path: '/service/versions/current.{_format}'
-    defaults: { _controller: 'vocento.microservice.controller:currentVersionAction' }
+    defaults: { _controller: 'vocento.service.controller:currentVersionAction' }
     requirements:
         _format: 'json'
