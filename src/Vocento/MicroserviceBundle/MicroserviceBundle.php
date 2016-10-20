@@ -11,59 +11,13 @@
 
 namespace Vocento\MicroserviceBundle;
 
-use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Vocento\MicroserviceBundle\DependencyInjection\Compiler\RoutingCompilerPass;
 use Vocento\MicroserviceBundle\DependencyInjection\MicroserviceExtension;
 
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>
  */
-class MicroserviceBundle implements BundleInterface
+class MicroserviceBundle extends AbstractMicroserviceBundle
 {
-    use ContainerAwareTrait;
-
-    /** @var string */
-    protected $path;
-
-    /**
-     * @inheritDoc
-     */
-    public function boot()
-    {
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function shutdown()
-    {
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function build(ContainerBuilder $container)
-    {
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getContainerExtension()
-    {
-        return new MicroserviceExtension(array('controllers', 'listeners'));
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getParent()
-    {
-    }
-
     /**
      * @inheritDoc
      */
@@ -75,23 +29,8 @@ class MicroserviceBundle implements BundleInterface
     /**
      * @inheritDoc
      */
-    public function getNamespace()
+    public function getContainerExtension()
     {
-        $class = get_class($this);
-
-        return substr($class, 0, strrpos($class, '\\'));
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getPath()
-    {
-        if (null === $this->path) {
-            $reflected = new \ReflectionObject($this);
-            $this->path = dirname($reflected->getFileName());
-        }
-
-        return $this->path;
+        return new MicroserviceExtension(array('controllers', 'listeners'));
     }
 }
