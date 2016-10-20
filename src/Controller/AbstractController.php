@@ -36,7 +36,7 @@ abstract class AbstractController
      */
     private function setVersion($version)
     {
-        Assertion::regex($version, '/v[0-9][\.0-9]{0,2}/');
+        Assertion::regex($version, '/^v(\d+\.)?(\d+\.)?(\d+)$/');
 
         $this->version = $version;
     }
@@ -44,8 +44,16 @@ abstract class AbstractController
     /**
      * @return string
      */
-    protected function getVersion()
+    public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMajorVersion()
+    {
+        return strtok($this->version, '.');
     }
 }

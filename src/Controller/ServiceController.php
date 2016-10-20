@@ -11,12 +11,13 @@
 
 namespace Vocento\MicroserviceBundle\Controller;
 
+use Assert\Assertion;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>
  */
-class ServiceController extends AbstractController
+final class ServiceController extends AbstractController
 {
     /** @var string */
     private $serviceName;
@@ -35,8 +36,36 @@ class ServiceController extends AbstractController
     {
         parent::__construct($currentVersion);
 
+        $this->setServiceName($serviceName);
+        $this->setVersions($versions);
+    }
+
+    /**
+     * @param $serviceName
+     */
+    private function setServiceName($serviceName)
+    {
+        \Assert\that($serviceName)
+            ->string()
+            ->notBlank();
+
         $this->serviceName = $serviceName;
-        $this->versions = $versions;
+    }
+
+    /**
+     * @param array $versions
+     */
+    private function setVersions(array $versions)
+    {
+        Assertion::isArray($versions);
+        Assertion::greaterThan(count($versions), 1);
+
+        $this->versions = [];
+
+        foreach ($versions as $version) {
+            Assertion::regex($version, '/^v(\d+\.)?(\d+\.)?(\d+)$/');
+            $this->versions[] = $version;
+        }
     }
 
     /**

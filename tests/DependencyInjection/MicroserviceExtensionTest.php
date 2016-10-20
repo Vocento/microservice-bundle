@@ -9,7 +9,7 @@
  *
  */
 
-namespace Vocento\MicroserviceBundle\Tests;
+namespace Vocento\MicroserviceBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Vocento\MicroserviceBundle\DependencyInjection\MicroserviceExtension;
@@ -110,6 +110,28 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                     'microservice.debug' => true,
                     'microservice.versions.current' => 'v1',
                     'microservice.versions.list' => ['v1'],
+                ],
+            ],
+        ];
+
+        /**
+         * Case 4
+         */
+        $testCases[] = [
+            [
+                'name' => 'test',
+                'debug' => true,
+                'versions' => [
+                    'list' => ['v1.1.2'],
+                    'current' => 'latest',
+                ],
+            ],
+            [
+                'parameters' => [
+                    'microservice.name' => 'test',
+                    'microservice.debug' => true,
+                    'microservice.versions.current' => 'v1.1.2',
+                    'microservice.versions.list' => ['v1.1.2'],
                 ],
             ],
         ];

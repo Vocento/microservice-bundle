@@ -14,16 +14,25 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Vocento\\MicroserviceBundle\\": "src/Vocento/MicroserviceBundle" }
+        "psr-4": {
+            "Vocento\\MicroserviceBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Vocento\\MicroserviceBundle\\Tests\\": "tests/"
+        }
     },
     "require": {
+        "beberlei/assert": "~2.6",
         "symfony/symfony": "3.1.*",
-        "vocento/request-id": "^1.0",
-        "beberlei/assert": "~2.6"
+        "vocento/request-id": "^1.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^3.0",
         "matthiasnoback/symfony-dependency-injection-test": "^1.0",
         "phpunit/phpunit": "^5.0"
+    },
+    "config": {
+        "bin-dir": "bin"
     }
 }
