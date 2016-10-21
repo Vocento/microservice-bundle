@@ -58,7 +58,7 @@ final class ServiceController extends AbstractController
     private function setVersions(array $versions)
     {
         Assertion::isArray($versions);
-        Assertion::greaterThan(count($versions), 1);
+        Assertion::greaterOrEqualThan(count($versions), 1);
 
         $this->versions = [];
 
