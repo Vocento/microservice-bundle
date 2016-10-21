@@ -31,7 +31,7 @@ trait SerializerAwareControllerTrait
      *
      * @return string
      */
-    public function serialize($object, $version, array $groups = [])
+    public function serializeObject($object, $version, array $groups = [])
     {
         if ($this->serializer) {
             return $this->getSerializer()->serialize($object, 'json', $this->createContext($version, $groups));
@@ -62,7 +62,7 @@ trait SerializerAwareControllerTrait
      *
      * @return SerializationContext
      */
-    private function createContext($version, array $groups)
+    protected function createContext($version, array $groups)
     {
         foreach ($groups as $index => $group) {
             $majorVersion = strtok($version, '.');
