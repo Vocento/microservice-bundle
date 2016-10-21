@@ -31,9 +31,13 @@
     },
     "require-dev": {
         "matthiasnoback/symfony-dependency-injection-test": "^1.0",
-        "phpunit/phpunit": "^5.0"
+        "phpunit/phpunit": "^5.0",
+        "jms/serializer": "~1.1"
     },
     "config": {
         "bin-dir": "bin"
+    },
+    "suggest": {
+        "jms/serializer": "Allows the usage of SerializerAwareControllerTrait to include some extra methods to the controllers."
     }
 }

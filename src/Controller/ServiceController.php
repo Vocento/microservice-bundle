@@ -73,7 +73,7 @@ final class ServiceController extends AbstractController
      */
     public function nameAction()
     {
-        return new JsonResponse(array('name' => $this->serviceName));
+        return new JsonResponse(['name' => $this->serviceName]);
     }
 
     /**
@@ -81,7 +81,7 @@ final class ServiceController extends AbstractController
      */
     public function currentVersionAction()
     {
-        return new JsonResponse(array('version' => $this->getVersion()));
+        return new JsonResponse(['version' => $this->getVersion()]);
     }
 
     /**
@@ -89,6 +89,6 @@ final class ServiceController extends AbstractController
      */
     public function versionsAction()
     {
-        return new JsonResponse(array('versions' => $this->versions, 'current' => $this->getVersion()));
+        return new JsonResponse(['versions' => $this->versions, 'current' => $this->getVersion()]);
     }
 }
