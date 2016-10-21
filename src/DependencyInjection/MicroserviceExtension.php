@@ -11,6 +11,9 @@
 
 namespace Vocento\MicroserviceBundle\DependencyInjection;
 
+use Composer\Semver\Comparator;
+use Composer\Semver\Semver;
+use Composer\Semver\VersionParser;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
@@ -28,6 +31,7 @@ class MicroserviceExtension implements ExtensionInterface
 
     /**
      * MicroserviceExtension constructor.
+     *
      * @param array $configFiles
      */
     public function __construct(array $configFiles = array())
@@ -52,17 +56,19 @@ class MicroserviceExtension implements ExtensionInterface
         }
 
         $config = $this->processConfiguration(new Configuration(), $configs);
-        $config['versions']['list'] = $this->sortVersions($config['versions']['list']);
 
         $container->setParameter('microservice.name', $config['name']);
         $container->setParameter('microservice.debug', ($config['debug'] ? true : false));
-        $container->setParameter('microservice.versions.current', $this->getCurrentVersion($config['versions']['current'], $config['versions']['list']));
-        $container->setParameter('microservice.versions.list', $this->sortVersions($config['versions']['list']));
+
+        $versions = $this->normalizeVersions($config['versions']['list']);
+        $container->setParameter('microservice.versions.list', $versions);
+        $container->setParameter('microservice.versions.current', $this->getCurrentVersion($config['versions']['current'], $versions));
     }
 
     /**
      * @param ConfigurationInterface $configuration
      * @param array $config
+     *
      * @return array
      */
     protected function processConfiguration(ConfigurationInterface $configuration, array $config)
@@ -74,33 +80,56 @@ class MicroserviceExtension implements ExtensionInterface
 
     /**
      * @param array $versions
+     *
      * @return array
      */
-    private function sortVersions(array $versions)
+    private function normalizeVersions(array $versions)
     {
-        usort(
-            $versions,
-            function ($version1, $version2) {
-                if ($version1 === $version2) {
-                    return 0;
+        // Sort versions
+        $versions = Semver::sort($versions);
+
+        $versionParser = new VersionParser();
+        $versionsCount = count($versions);
+        $removeKeys = [];
+
+        for ($i = 0; $i < $versionsCount; $i++) {
+            $version1 = $versionParser->normalize($versions[$i]);
+
+            for ($j = $i + 1; $j < $versionsCount; $j++) {
+                if (in_array($j, $removeKeys)) {
+                    continue;
                 }
 
-                return version_compare($version1, $version2, '<') ? -1 : 1;
+                if (Comparator::equalTo($version1, $versionParser->normalize($versions[$j], true))) {
+                    $removeKeys[] = $j;
+                }
             }
-        );
+        }
 
-        return $versions;
+        foreach ($removeKeys as $key) {
+            unset($versions[$key]);
+        }
+
+        return array_values($versions);
     }
 
     /**
      * @param string $currentVersion
      * @param array $versions
+     *
      * @return string
      */
     private function getCurrentVersion($currentVersion, array $versions)
     {
         if ('latest' === strtolower($currentVersion) && count($versions)) {
-            return array_pop($versions);
+            $versions = Semver::rsort($versions);
+            foreach ($versions as $version) {
+                if ('stable' === VersionParser::parseStability($version)) {
+                    return $version;
+                }
+            }
+
+            return array_shift($versions);
         }
 
         return $currentVersion;

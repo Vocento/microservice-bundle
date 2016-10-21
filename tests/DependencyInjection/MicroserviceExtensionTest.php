@@ -52,12 +52,13 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
 
         /**
          * Case 1
+         * Repeated version with all majors and latest
          */
         $testCases[] = [
             [
                 'name' => 'test',
                 'versions' => [
-                    'list' => ['v3', 'v1', 'v2'],
+                    'list' => ['v1', 'v3', 'v1', 'v2'],
                     'current' => 'latest',
                 ],
             ],
@@ -73,12 +74,13 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
 
         /**
          * Case 2
+         * Repeated versions with all majors and current version defined
          */
         $testCases[] = [
             [
                 'name' => 'test',
                 'versions' => [
-                    'list' => ['v3', 'v1', 'v2'],
+                    'list' => ['v3', 'v1', 'v2', 'v2'],
                     'current' => 'v2',
                 ],
             ],
@@ -94,6 +96,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
 
         /**
          * Case 3
+         * Single version and current version defined
          */
         $testCases[] = [
             [
@@ -116,6 +119,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
 
         /**
          * Case 4
+         * Deeper version and current set as latest
          */
         $testCases[] = [
             [
@@ -132,6 +136,98 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                     'microservice.debug' => true,
                     'microservice.versions.current' => 'v1.1.2',
                     'microservice.versions.list' => ['v1.1.2'],
+                ],
+            ],
+        ];
+
+        /**
+         * Case 5
+         * Repeated versions and current set as latest
+         */
+        $testCases[] = [
+            [
+                'name' => 'test',
+                'debug' => true,
+                'versions' => [
+                    'list' => ['v1.1.2', 'v1', 'v1.0', 'v1.0.0'],
+                    'current' => 'latest',
+                ],
+            ],
+            [
+                'parameters' => [
+                    'microservice.name' => 'test',
+                    'microservice.debug' => true,
+                    'microservice.versions.current' => 'v1.1.2',
+                    'microservice.versions.list' => ['v1.0.0', 'v1.1.2'],
+                ],
+            ],
+        ];
+
+        /**
+         * Case 6
+         * Unstable versions and current version set as latest that should result in a stable current version
+         */
+        $testCases[] = [
+            [
+                'name' => 'test',
+                'debug' => true,
+                'versions' => [
+                    'list' => ['v1.1.2', 'v2.0-alpha', 'v1', 'v2.0-beta', 'v1.0', 'v1.0.0'],
+                    'current' => 'latest',
+                ],
+            ],
+            [
+                'parameters' => [
+                    'microservice.name' => 'test',
+                    'microservice.debug' => true,
+                    'microservice.versions.current' => 'v1.1.2',
+                    'microservice.versions.list' => ['v1.0.0', 'v1.1.2', 'v2.0-alpha', 'v2.0-beta'],
+                ],
+            ],
+        ];
+
+        /**
+         * Case 7
+         * Unstable versions and current version defined with unstable version
+         */
+        $testCases[] = [
+            [
+                'name' => 'test',
+                'debug' => true,
+                'versions' => [
+                    'list' => ['v1.1.2', 'v2.0-alpha', 'v1', 'v2.0-beta', 'v1.0', 'v1.0.0'],
+                    'current' => 'v2.0-beta',
+                ],
+            ],
+            [
+                'parameters' => [
+                    'microservice.name' => 'test',
+                    'microservice.debug' => true,
+                    'microservice.versions.current' => 'v2.0-beta',
+                    'microservice.versions.list' => ['v1.0.0', 'v1.1.2', 'v2.0-alpha', 'v2.0-beta'],
+                ],
+            ],
+        ];
+
+        /**
+         * Case 8
+         * Unstable versions and current version set as latest
+         */
+        $testCases[] = [
+            [
+                'name' => 'test',
+                'debug' => true,
+                'versions' => [
+                    'list' => ['v2.0-alpha', 'v2.0-beta'],
+                    'current' => 'latest',
+                ],
+            ],
+            [
+                'parameters' => [
+                    'microservice.name' => 'test',
+                    'microservice.debug' => true,
+                    'microservice.versions.current' => 'v2.0-beta',
+                    'microservice.versions.list' => ['v2.0-alpha', 'v2.0-beta'],
                 ],
             ],
         ];

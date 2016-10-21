@@ -26,7 +26,8 @@
     "require": {
         "beberlei/assert": "~2.6",
         "symfony/symfony": "3.1.*",
-        "vocento/request-id": "^1.0"
+        "vocento/request-id": "^1.0",
+        "composer/semver": "~1.4"
     },
     "require-dev": {
         "matthiasnoback/symfony-dependency-injection-test": "^1.0",
