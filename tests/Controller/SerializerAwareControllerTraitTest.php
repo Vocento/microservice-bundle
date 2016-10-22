@@ -26,7 +26,7 @@ class SerializerAwareControllerTraitTest extends \PHPUnit_Framework_TestCase
     {
         $trait = $this->createTraitStub();
 
-        $this->assertNull($trait->serialize(['test' => '1'], 'v1', ['group1', 'group2']));
+        $this->assertNull($trait->serializeObject(['test' => '1'], 'v1', ['group1', 'group2']));
     }
 
     /**
@@ -53,7 +53,7 @@ class SerializerAwareControllerTraitTest extends \PHPUnit_Framework_TestCase
         $trait = $this->createTraitStub();
         $trait->setSerializer($serializer);
 
-        $trait->serialize($object, $version, $groups);
+        $trait->serializeObject($object, $version, $groups);
     }
 
     /**
