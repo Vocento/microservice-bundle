@@ -19,18 +19,6 @@ use Vocento\RequestId;
  */
 final class SetResponseHeadersListener
 {
-    /** @var string */
-    private $serviceName;
-
-    /**
-     * CheckRequestIdOrCreateListener constructor.
-     * @param string $serviceName
-     */
-    public function __construct($serviceName)
-    {
-        $this->serviceName = $serviceName;
-    }
-
     /**
      * @param FilterResponseEvent $event
      */
@@ -39,9 +27,6 @@ final class SetResponseHeadersListener
         if (!$event->isMasterRequest()) {
             return;
         }
-
-        // Set service-name header
-        $event->getRequest()->headers->set('service-name', $this->serviceName);
 
         // Set request-id header
         if (null === $event->getResponse()->headers->get('request-id')) {
