@@ -23,13 +23,19 @@ final class ExceptionListener
     /** @var bool */
     private $debug = false;
 
+    /** @var bool */
+    private $manageExceptions = true;
+
     /**
      * ExceptionListener constructor.
+     *
      * @param bool $debug
+     * @param bool $manageExceptions
      */
-    public function __construct($debug = false)
+    public function __construct($debug = false, $manageExceptions = true)
     {
         $this->debug = $debug;
+        $this->manageExceptions = $manageExceptions;
     }
 
     /**
@@ -37,7 +43,7 @@ final class ExceptionListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        if (false === $this->debug) {
+        if (false === $this->debug && true === $this->manageExceptions) {
             $response = new Response();
 
             if ($event->getException() instanceof HttpExceptionInterface) {
