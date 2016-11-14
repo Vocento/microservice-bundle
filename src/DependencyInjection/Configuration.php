@@ -38,6 +38,10 @@ class Configuration implements ConfigurationInterface
                     ->info('Enable debug mode')
                     ->defaultFalse()
                 ->end()
+                ->booleanNode('manage_exceptions')
+                    ->info('Manage exceptions')
+                    ->defaultTrue()
+                ->end()
             ->end()
         ;
 

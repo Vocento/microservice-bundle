@@ -66,6 +66,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'parameters' => [
                     'microservice.name' => 'test',
                     'microservice.debug' => false,
+                    'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v3',
                     'microservice.versions.list' => ['v1', 'v2', 'v3'],
                 ],
@@ -88,6 +89,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'parameters' => [
                     'microservice.name' => 'test',
                     'microservice.debug' => false,
+                    'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v2',
                     'microservice.versions.list' => ['v1', 'v2', 'v3'],
                 ],
@@ -111,6 +113,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'parameters' => [
                     'microservice.name' => 'test',
                     'microservice.debug' => true,
+                    'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v1',
                     'microservice.versions.list' => ['v1'],
                 ],
@@ -134,6 +137,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'parameters' => [
                     'microservice.name' => 'test',
                     'microservice.debug' => true,
+                    'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v1.1.2',
                     'microservice.versions.list' => ['v1.1.2'],
                 ],
@@ -157,6 +161,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'parameters' => [
                     'microservice.name' => 'test',
                     'microservice.debug' => true,
+                    'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v1.1.2',
                     'microservice.versions.list' => ['v1.0.0', 'v1.1.2'],
                 ],
@@ -180,6 +185,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'parameters' => [
                     'microservice.name' => 'test',
                     'microservice.debug' => true,
+                    'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v1.1.2',
                     'microservice.versions.list' => ['v1.0.0', 'v1.1.2', 'v2.0-alpha', 'v2.0-beta'],
                 ],
@@ -203,6 +209,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'parameters' => [
                     'microservice.name' => 'test',
                     'microservice.debug' => true,
+                    'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v2.0-beta',
                     'microservice.versions.list' => ['v1.0.0', 'v1.1.2', 'v2.0-alpha', 'v2.0-beta'],
                 ],
@@ -226,8 +233,34 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'parameters' => [
                     'microservice.name' => 'test',
                     'microservice.debug' => true,
+                    'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v2.0-beta',
                     'microservice.versions.list' => ['v2.0-alpha', 'v2.0-beta'],
+                ],
+            ],
+        ];
+
+        /**
+         * Case 9
+         * Manage exceptions is disabled
+         */
+        $testCases[] = [
+            [
+                'name' => 'test',
+                'debug' => true,
+                'manage_exceptions' => false,
+                'versions' => [
+                    'list' => ['v1.0', 'v1.1'],
+                    'current' => 'latest',
+                ],
+            ],
+            [
+                'parameters' => [
+                    'microservice.name' => 'test',
+                    'microservice.debug' => true,
+                    'microservice.manage_exceptions' => false,
+                    'microservice.versions.current' => 'v1.1',
+                    'microservice.versions.list' => ['v1.0', 'v1.1'],
                 ],
             ],
         ];
