@@ -46,13 +46,15 @@ Add the bundle configuration to your `config.yml` file
 
 microservice:
     name: 'your-microservice-name'
+    debug: false                   # when true will show exception information
+    manage_exceptions: true
     versions:
         list:
             - 'v1'
             - 'v2'
             - 'v3.1'
             - 'v3.1.4'
-        curent: 'v1' # default is latests
+        current: 'v1'              # default is latests
 ```
 
 ### Configure the Bundle routes

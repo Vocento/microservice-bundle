@@ -10,6 +10,7 @@ services:
         class: Vocento\MicroserviceBundle\Listeners\ExceptionListener
         arguments:
             - '%microservice.debug%'
+            - '%microservice.manage_exceptions%'
         tags:
             - { name: kernel.event_listener, event: kernel.exception,  method: onKernelException, priority: 128 }
 
