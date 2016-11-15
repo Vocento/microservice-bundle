@@ -11,6 +11,8 @@
 
 namespace Vocento\MicroserviceBundle\Tests\Controller;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>
  */
@@ -46,6 +48,28 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase
     {
         $controller = $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', [$version]);
         $this->assertEquals($majorVersion, $controller->getMajorVersion());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCreateJsonResponse()
+    {
+        $data = ['data' => 'data'];
+        $status = 201;
+        $headers = [];
+        $sharedMaxAge = 100;
+
+        $response = new JsonResponse($data, $status, $headers);
+        $response->setSharedMaxAge($sharedMaxAge);
+
+        $controller = $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', ['v1']);
+
+        $controllerResponse = $controller->getJsonResponse($data, $status, $headers, $sharedMaxAge);
+        $this->assertEquals($response->getContent(), $controllerResponse->getContent());
+        $this->assertEquals($response->getStatusCode(), $controllerResponse->getStatusCode());
+        $this->assertEquals($response->headers->all(), $controllerResponse->headers->all());
+        $this->assertEquals($response->getMaxAge(), $controllerResponse->getMaxAge());
     }
 
     /**
