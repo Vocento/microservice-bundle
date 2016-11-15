@@ -12,6 +12,7 @@
 namespace Vocento\MicroserviceBundle\Controller;
 
 use Assert\Assertion;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>
@@ -55,5 +56,19 @@ abstract class AbstractController
     public function getMajorVersion()
     {
         return strtok($this->version, '.');
+    }
+
+    /**
+     * @param array $data
+     * @param int $status
+     * @param array $headers
+     * @param int $sharedMaxAge
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getJsonResponse(array $data, $status = 200, array $headers = [], $sharedMaxAge = 0)
+    {
+        return JsonResponse::create($data, $status, $headers)
+            ->setSharedMaxAge($sharedMaxAge);
     }
 }
