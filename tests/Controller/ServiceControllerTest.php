@@ -36,39 +36,26 @@ class ServiceControllerTest extends \PHPUnit_Framework_TestCase
      * @test
      * @dataProvider validConstructorArguments
      */
+    public function serviceActionShouldReturnJsonResponse($serviceName, array $versions, $currentVersion)
+    {
+        $controller = $this->createController($serviceName, $versions, $currentVersion);
+        $response = $controller->serviceAction();
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
+        $this->assertEquals(json_encode(['service' => ['current' => $currentVersion, 'name' => $serviceName, 'versions' => $versions]]), $response->getContent());
+    }
+
+    /**
+     * @test
+     * @dataProvider validConstructorArguments
+     */
     public function nameActionShouldReturnJsonResponse($serviceName, array $versions, $currentVersion)
     {
         $controller = $this->createController($serviceName, $versions, $currentVersion);
         $response = $controller->nameAction();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
-        $this->assertEquals(json_encode(['name' => $serviceName]), $response->getContent());
-    }
-
-    /**
-     * @test
-     * @dataProvider validConstructorArguments
-     */
-    public function versionsActionShouldReturnJsonResponse($serviceName, array $versions, $currentVersion)
-    {
-        $controller = $this->createController($serviceName, $versions, $currentVersion);
-        $response = $controller->versionsAction();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
-        $this->assertEquals(json_encode(['versions' => $versions, 'current' => $currentVersion]), $response->getContent());
-    }
-
-    /**
-     * @test
-     * @dataProvider validConstructorArguments
-     */
-    public function currentVersionActionShouldReturnJsonResponse($serviceName, array $versions, $currentVersion)
-    {
-        $controller = $this->createController($serviceName, $versions, $currentVersion);
-        $response = $controller->currentVersionAction();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
-        $this->assertEquals(json_encode(['version' => $currentVersion]), $response->getContent());
+        $this->assertEquals(json_encode(['service' => ['name' => $serviceName]]), $response->getContent());
     }
 
     /**
@@ -81,6 +68,32 @@ class ServiceControllerTest extends \PHPUnit_Framework_TestCase
     private function createController($serviceName, array $versions, $currentVersion)
     {
         return new ServiceController($serviceName, $versions, $currentVersion);
+    }
+
+    /**
+     * @test
+     * @dataProvider validConstructorArguments
+     */
+    public function versionsActionShouldReturnJsonResponse($serviceName, array $versions, $currentVersion)
+    {
+        $controller = $this->createController($serviceName, $versions, $currentVersion);
+        $response = $controller->versionsAction();
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
+        $this->assertEquals(json_encode(['service' => ['current' => $currentVersion, 'versions' => $versions]]), $response->getContent());
+    }
+
+    /**
+     * @test
+     * @dataProvider validConstructorArguments
+     */
+    public function currentVersionActionShouldReturnJsonResponse($serviceName, array $versions, $currentVersion)
+    {
+        $controller = $this->createController($serviceName, $versions, $currentVersion);
+        $response = $controller->currentVersionAction();
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
+        $this->assertEquals(json_encode(['service' => ['version' => $currentVersion]]), $response->getContent());
     }
 
     /**

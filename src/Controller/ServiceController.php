@@ -71,9 +71,17 @@ final class ServiceController extends AbstractController
     /**
      * @return JsonResponse
      */
+    public function serviceAction()
+    {
+        return new JsonResponse(['service' => ['current' => $this->getVersion(), 'name' => $this->serviceName, 'versions' => $this->versions]]);
+    }
+
+    /**
+     * @return JsonResponse
+     */
     public function nameAction()
     {
-        return new JsonResponse(['name' => $this->serviceName]);
+        return new JsonResponse(['service' => ['name' => $this->serviceName]]);
     }
 
     /**
@@ -81,7 +89,7 @@ final class ServiceController extends AbstractController
      */
     public function currentVersionAction()
     {
-        return new JsonResponse(['version' => $this->getVersion()]);
+        return new JsonResponse(['service' => ['version' => $this->getVersion()]]);
     }
 
     /**
@@ -89,6 +97,6 @@ final class ServiceController extends AbstractController
      */
     public function versionsAction()
     {
-        return new JsonResponse(['versions' => $this->versions, 'current' => $this->getVersion()]);
+        return new JsonResponse(['service' => ['current' => $this->getVersion(), 'versions' => $this->versions]]);
     }
 }
