@@ -18,6 +18,7 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
+     *
      * @expectedException \InvalidArgumentException
      * @dataProvider invalidVersions
      */
@@ -28,12 +29,23 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     *
      * @dataProvider validVersions
      */
     public function validVersionShouldReturnVersion($version, $majorVersion)
     {
         $controller = $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', [$version]);
         $this->assertEquals($version, $controller->getVersion());
+    }
+
+    /**
+     * @test
+     * @dataProvider validVersions
+     */
+    public function majorVersionShouldReturnMajorVersion($version, $majorVersion)
+    {
+        $controller = $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', [$version]);
+        $this->assertEquals($majorVersion, $controller->getMajorVersion());
     }
 
     /**
