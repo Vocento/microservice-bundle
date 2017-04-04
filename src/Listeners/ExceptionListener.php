@@ -11,6 +11,7 @@
 
 namespace Vocento\MicroserviceBundle\Listeners;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -26,16 +27,21 @@ final class ExceptionListener
     /** @var bool */
     private $manageExceptions = true;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /**
      * ExceptionListener constructor.
      *
      * @param bool $debug
      * @param bool $manageExceptions
+     * @param LoggerInterface $logger
      */
-    public function __construct($debug = false, $manageExceptions = true)
+    public function __construct($debug = false, $manageExceptions = true, LoggerInterface $logger = null)
     {
         $this->debug = $debug;
         $this->manageExceptions = $manageExceptions;
+        $this->logger = $logger;
     }
 
     /**
@@ -44,6 +50,8 @@ final class ExceptionListener
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         if (false === $this->debug && true === $this->manageExceptions) {
+            $this->logException($event->getException());
+
             $response = new Response();
 
             if ($event->getException() instanceof HttpExceptionInterface) {
@@ -60,6 +68,30 @@ final class ExceptionListener
 
             $event->setResponse($response);
             $event->stopPropagation();
+        }
+    }
+
+    /**
+     * Logs an exception.
+     *
+     * @param \Exception $exception The \Exception instance
+     */
+    protected function logException(\Exception $exception)
+    {
+        $message = sprintf(
+            'Uncaught PHP Exception %s: "%s" at %s line %s',
+            get_class($exception),
+            $exception->getMessage(),
+            $exception->getFile(),
+            $exception->getLine()
+        );
+
+        if (null !== $this->logger) {
+            if (!$exception instanceof HttpExceptionInterface || $exception->getStatusCode() >= 500) {
+                $this->logger->critical($message, array('exception' => $exception));
+            } else {
+                $this->logger->error($message, array('exception' => $exception));
+            }
         }
     }
 }

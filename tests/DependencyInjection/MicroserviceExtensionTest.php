@@ -51,7 +51,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         $testCases = [];
 
         /**
-         * Case 1
+         * Case 0
          * Repeated version with all majors and latest
          */
         $testCases[] = [
@@ -74,7 +74,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         ];
 
         /**
-         * Case 2
+         * Case 1
          * Repeated versions with all majors and current version defined
          */
         $testCases[] = [
@@ -97,7 +97,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         ];
 
         /**
-         * Case 3
+         * Case 2
          * Single version and current version defined
          */
         $testCases[] = [
@@ -121,7 +121,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         ];
 
         /**
-         * Case 4
+         * Case 3
          * Deeper version and current set as latest
          */
         $testCases[] = [
@@ -145,7 +145,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         ];
 
         /**
-         * Case 5
+         * Case 4
          * Repeated versions and current set as latest
          */
         $testCases[] = [
@@ -153,7 +153,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'name' => 'test',
                 'debug' => true,
                 'versions' => [
-                    'list' => ['v1.1.2', 'v1', 'v1.0', 'v1.0.0'],
+                    'list' => ['v1.1.2', 'v1.0.0', 'v1.0.0', 'v1.0.0'],
                     'current' => 'latest',
                 ],
             ],
@@ -169,7 +169,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         ];
 
         /**
-         * Case 6
+         * Case 5
          * Unstable versions and current version set as latest that should result in a stable current version
          */
         $testCases[] = [
@@ -177,7 +177,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'name' => 'test',
                 'debug' => true,
                 'versions' => [
-                    'list' => ['v1.1.2', 'v2.0-alpha', 'v1', 'v2.0-beta', 'v1.0', 'v1.0.0'],
+                    'list' => ['v1.1.2', 'v2.0-alpha', 'v1.0.0', 'v2.0-beta', 'v1.0.0', 'v1.0.0'],
                     'current' => 'latest',
                 ],
             ],
@@ -193,7 +193,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         ];
 
         /**
-         * Case 7
+         * Case 6
          * Unstable versions and current version defined with unstable version
          */
         $testCases[] = [
@@ -201,7 +201,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'name' => 'test',
                 'debug' => true,
                 'versions' => [
-                    'list' => ['v1.1.2', 'v2.0-alpha', 'v1', 'v2.0-beta', 'v1.0', 'v1.0.0'],
+                    'list' => ['v1.1.2', 'v2.0-alpha', 'v1.0.0', 'v2.0-beta', 'v1.0.0', 'v1.0.0'],
                     'current' => 'v2.0-beta',
                 ],
             ],
@@ -217,7 +217,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         ];
 
         /**
-         * Case 8
+         * Case 7
          * Unstable versions and current version set as latest
          */
         $testCases[] = [
@@ -241,7 +241,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         ];
 
         /**
-         * Case 9
+         * Case 8
          * Manage exceptions is disabled
          */
         $testCases[] = [

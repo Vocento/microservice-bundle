@@ -11,6 +11,7 @@ services:
         arguments:
             - '%microservice.debug%'
             - '%microservice.manage_exceptions%'
+            - '@?logger'
         tags:
             - { name: kernel.event_listener, event: kernel.exception,  method: onKernelException, priority: 128 }
 

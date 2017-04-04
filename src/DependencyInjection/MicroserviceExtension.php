@@ -91,23 +91,22 @@ class MicroserviceExtension implements ExtensionInterface
 
         $versionParser = new VersionParser();
         $versionsCount = count($versions);
-        $removeKeys = [];
+
+        $removedVersionsKey = [];
 
         for ($i = 0; $i < $versionsCount; $i++) {
-            $version1 = $versionParser->normalize($versions[$i]);
-
             for ($j = $i + 1; $j < $versionsCount; $j++) {
-                if (in_array($j, $removeKeys)) {
+                if ($i === $j || in_array($j, $removedVersionsKey)) {
                     continue;
                 }
 
-                if (Comparator::equalTo($version1, $versionParser->normalize($versions[$j], true))) {
-                    $removeKeys[] = $j;
+                if (Comparator::equalTo($versionParser->normalize($versions[$i], true), $versionParser->normalize($versions[$j]))) {
+                    $removedVersionsKey[] = $j;
                 }
             }
         }
 
-        foreach ($removeKeys as $key) {
+        foreach ($removedVersionsKey as $key) {
             unset($versions[$key]);
         }
 

@@ -2,6 +2,8 @@ language: php
 
 php:
   - 5.6
+  - 7.0
+  - 7.1
 
 cache:
   directories:
@@ -12,7 +14,7 @@ before_script:
   - composer install
 
 script:
-  - phpunit --coverage-text
+  - ./bin/phpunit --coverage-text
 
 notifications:
   email:
