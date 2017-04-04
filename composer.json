@@ -27,7 +27,8 @@
         "symfony/symfony": ">=2.7",
         "beberlei/assert": "~2.6",
         "vocento/request-id": "^1.0",
-        "composer/semver": "~1.4"
+        "composer/semver": "~1.4",
+        "monolog/monolog": "~1.22"
     },
     "require-dev": {
         "matthiasnoback/symfony-dependency-injection-test": "^1.0",
