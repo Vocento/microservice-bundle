@@ -153,7 +153,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'name' => 'test',
                 'debug' => true,
                 'versions' => [
-                    'list' => ['v1.1.2', 'v1', 'v1.0', 'v1.0.0'],
+                    'list' => ['v1.1.2', 'v1.0.0', 'v1.0.0', 'v1.0.0'],
                     'current' => 'latest',
                 ],
             ],
@@ -163,7 +163,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                     'microservice.debug' => true,
                     'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v1.1.2',
-                    'microservice.versions.list' => ['v1.0', 'v1.1.2'],
+                    'microservice.versions.list' => ['v1.0.0', 'v1.1.2'],
                 ],
             ],
         ];
@@ -177,7 +177,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'name' => 'test',
                 'debug' => true,
                 'versions' => [
-                    'list' => ['v1.1.2', 'v2.0-alpha', 'v1.0.0', 'v2.0-beta', 'v1', 'v1.0'],
+                    'list' => ['v1.1.2', 'v2.0-alpha', 'v1.0.0', 'v2.0-beta', 'v1.0.0', 'v1.0.0'],
                     'current' => 'latest',
                 ],
             ],
@@ -201,7 +201,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
                 'name' => 'test',
                 'debug' => true,
                 'versions' => [
-                    'list' => ['v1.1.2', 'v2.0-alpha', 'v1.0.0', 'v2.0-beta', 'v1.0', 'v1'],
+                    'list' => ['v1.1.2', 'v2.0-alpha', 'v1.0.0', 'v2.0-beta', 'v1.0.0', 'v1.0.0'],
                     'current' => 'v2.0-beta',
                 ],
             ],
