@@ -34,7 +34,7 @@ final class ServiceController extends AbstractController
      */
     public function __construct($serviceName, array $versions, $currentVersion)
     {
-        parent::__construct($currentVersion);
+        parent::__construct(0, $currentVersion);
 
         $this->setServiceName($serviceName);
         $this->setVersions($versions);

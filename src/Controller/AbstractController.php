@@ -22,14 +22,29 @@ abstract class AbstractController
     /** @var string */
     private $version;
 
+    /** @var int */
+    private $sharedMaxAge = 0;
+
     /**
      * AbstractController constructor.
      *
+     * @param int $sharedMaxAge
      * @param string $version
      */
-    public function __construct($version)
+    public function __construct($sharedMaxAge, $version)
     {
+        $this->setSharedMaxAge($sharedMaxAge);
         $this->setVersion($version);
+    }
+
+    /**
+     * @param int $sharedMaxAge
+     */
+    private function setSharedMaxAge($sharedMaxAge)
+    {
+        if (is_int($sharedMaxAge) && $sharedMaxAge > 0) {
+            $this->sharedMaxAge = $sharedMaxAge;
+        }
     }
 
     /**
@@ -70,5 +85,13 @@ abstract class AbstractController
     {
         return JsonResponse::create($data, $status, $headers)
             ->setSharedMaxAge($sharedMaxAge);
+    }
+
+    /**
+     * @return int
+     */
+    protected function getSharedMaxAge()
+    {
+        return $this->sharedMaxAge;
     }
 }

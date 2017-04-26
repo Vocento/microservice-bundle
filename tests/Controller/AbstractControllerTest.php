@@ -26,7 +26,7 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function invalidVersionShouldThrowException($version)
     {
-        $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', [$version]);
+        $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', [0, $version]);
     }
 
     /**
@@ -36,8 +36,20 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function validVersionShouldReturnVersion($version, $majorVersion)
     {
-        $controller = $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', [$version]);
+        $controller = $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', [0, $version]);
         $this->assertEquals($version, $controller->getVersion());
+    }
+
+    /**
+     * @test
+     */
+    public function sharedMaxAgeShouldReturnValue()
+    {
+        $controller = $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', [300, 'v1']);
+
+        $method = (new \ReflectionObject($controller))->getMethod('getSharedMaxAge');
+        $method->setAccessible(true);
+        $this->assertEquals(300, $method->invoke($controller));
     }
 
     /**
@@ -46,7 +58,7 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function majorVersionShouldReturnMajorVersion($version, $majorVersion)
     {
-        $controller = $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', [$version]);
+        $controller = $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', [0, $version]);
         $this->assertEquals($majorVersion, $controller->getMajorVersion());
     }
 
@@ -63,7 +75,7 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase
         $response = new JsonResponse($data, $status, $headers);
         $response->setSharedMaxAge($sharedMaxAge);
 
-        $controller = $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', ['v1']);
+        $controller = $this->getMockForAbstractClass('Vocento\MicroserviceBundle\Controller\AbstractController', [0, 'v1']);
 
         $controllerResponse = $controller->getJsonResponse($data, $status, $headers, $sharedMaxAge);
         $this->assertEquals($response->getContent(), $controllerResponse->getContent());
