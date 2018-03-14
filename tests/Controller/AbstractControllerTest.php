@@ -11,12 +11,13 @@
 
 namespace Vocento\MicroserviceBundle\Tests\Controller;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>
  */
-class AbstractControllerTest extends \PHPUnit_Framework_TestCase
+class AbstractControllerTest extends TestCase
 {
     /**
      * @test

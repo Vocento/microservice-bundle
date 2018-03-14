@@ -11,6 +11,10 @@
         {
             "name": "Ariel Ferrandini",
             "email": "aferrandini@vocento.com"
+        },
+        {
+            "name": "Hector Prats",
+            "email": "hprats@vocento.com"
         }
     ],
     "autoload": {
@@ -24,15 +28,15 @@
         }
     },
     "require": {
-        "symfony/symfony": ">=2.7",
+        "symfony/symfony": "^3.4|^4.0",
         "beberlei/assert": "~2.6",
         "vocento/request-id": "^1.0",
         "composer/semver": "~1.4",
         "monolog/monolog": "~1.22"
     },
     "require-dev": {
-        "matthiasnoback/symfony-dependency-injection-test": "^1.0",
-        "phpunit/phpunit": "^5.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^2.0",
+        "phpunit/phpunit": "^6.0",
         "jms/serializer": "~1.1"
     },
     "config": {

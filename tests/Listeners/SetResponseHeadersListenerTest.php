@@ -11,6 +11,7 @@
 
 namespace Vocento\MicroserviceBundle\Tests\Listeners;
 
+use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +22,7 @@ use Vocento\MicroserviceBundle\Listeners\SetResponseHeadersListener;
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>
  */
-class SetResponseHeadersListenerTest extends \PHPUnit_Framework_TestCase
+class SetResponseHeadersListenerTest extends TestCase
 {
     /** @var string */
     private $serviceName;

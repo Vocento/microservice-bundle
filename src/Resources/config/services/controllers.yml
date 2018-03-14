@@ -1,6 +1,7 @@
 services:
     vocento.service.controller:
         class: Vocento\MicroserviceBundle\Controller\ServiceController
+        public: true
         arguments:
             - '%microservice.name%'
             - '%microservice.versions.list%'
