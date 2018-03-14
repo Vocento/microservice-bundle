@@ -12,12 +12,13 @@
 namespace Vocento\MicroserviceBundle\Tests\Controller;
 
 use JMS\Serializer\SerializerInterface;
+use PHPUnit\Framework\TestCase;
 use Vocento\MicroserviceBundle\Controller\SerializerAwareControllerTrait;
 
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>
  */
-class SerializerAwareControllerTraitTest extends \PHPUnit_Framework_TestCase
+class SerializerAwareControllerTraitTest extends TestCase
 {
     /**
      * @test

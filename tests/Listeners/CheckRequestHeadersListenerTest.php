@@ -11,6 +11,7 @@
 
 namespace Vocento\MicroserviceBundle\Tests\Listeners;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -19,7 +20,7 @@ use Vocento\MicroserviceBundle\Listeners\CheckRequestHeadersListener;
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>
  */
-class CheckRequestHeadersListenerTest extends \PHPUnit_Framework_TestCase
+class CheckRequestHeadersListenerTest extends TestCase
 {
     /** @var string */
     private $serviceName;

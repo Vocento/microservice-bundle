@@ -11,12 +11,13 @@
 
 namespace Vocento\MicroserviceBundle\Tests\Controller;
 
+use PHPUnit\Framework\TestCase;
 use Vocento\MicroserviceBundle\Controller\ServiceController;
 
 /**
  * @author Ariel Ferrandini <aferrandini@vocento.com>
  */
-class ServiceControllerTest extends \PHPUnit_Framework_TestCase
+class ServiceControllerTest extends TestCase
 {
     /**
      * @test
