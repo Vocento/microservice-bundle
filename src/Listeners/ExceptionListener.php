@@ -22,10 +22,10 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 final class ExceptionListener
 {
     /** @var bool */
-    private $debug = false;
+    private $debug;
 
     /** @var bool */
-    private $manageExceptions = true;
+    private $manageExceptions;
 
     /** @var LoggerInterface */
     private $logger;
@@ -46,8 +46,9 @@ final class ExceptionListener
 
     /**
      * @param GetResponseForExceptionEvent $event
+     * @throws \InvalidArgumentException
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         if (false === $this->debug && true === $this->manageExceptions) {
             $this->logException($event->getException());
@@ -60,10 +61,8 @@ final class ExceptionListener
                 $response->headers->add($exception->getHeaders());
 
                 $response->setStatusCode($exception->getStatusCode());
-                $response->headers->set('X-Status-Code', $exception->getStatusCode());
             } else {
                 $response->setStatusCode(500);
-                $response->headers->set('X-Status-Code', 500);
             }
 
             $event->setResponse($response);
@@ -76,11 +75,11 @@ final class ExceptionListener
      *
      * @param \Exception $exception The \Exception instance
      */
-    protected function logException(\Exception $exception)
+    private function logException(\Exception $exception): void
     {
         $message = sprintf(
             'Uncaught PHP Exception %s: "%s" at %s line %s',
-            get_class($exception),
+            \get_class($exception),
             $exception->getMessage(),
             $exception->getFile(),
             $exception->getLine()
