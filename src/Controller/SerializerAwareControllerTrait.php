@@ -25,13 +25,13 @@ trait SerializerAwareControllerTrait
     private $serializer;
 
     /**
-     * @param mixed $object
+     * @param mixed  $object
      * @param string $version
-     * @param array $groups
+     * @param array  $groups
      *
      * @return string
      */
-    public function serializeObject($object, $version, array $groups = [])
+    public function serializeObject($object, string $version, array $groups = []): ?string
     {
         if ($this->serializer) {
             return $this->getSerializer()->serialize($object, 'json', $this->createContext($version, $groups));
@@ -43,7 +43,7 @@ trait SerializerAwareControllerTrait
     /**
      * @return SerializerInterface
      */
-    public function getSerializer()
+    public function getSerializer(): SerializerInterface
     {
         return $this->serializer;
     }
@@ -51,21 +51,21 @@ trait SerializerAwareControllerTrait
     /**
      * @param SerializerInterface $serializer
      */
-    public function setSerializer(SerializerInterface $serializer)
+    public function setSerializer(SerializerInterface $serializer): void
     {
         $this->serializer = $serializer;
     }
 
     /**
      * @param string $version
-     * @param array $groups
+     * @param array  $groups
      *
      * @return SerializationContext
      */
-    protected function createContext($version, array $groups)
+    protected function createContext(string $version, array $groups): SerializationContext
     {
         foreach ($groups as $index => $group) {
-            $majorVersion = strtok($version, '.');
+            $majorVersion = \strtok($version, '.');
             $groups[$index] = $majorVersion.'.'.$group;
         }
 

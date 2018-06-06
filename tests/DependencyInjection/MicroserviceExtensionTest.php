@@ -25,7 +25,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
      * @param $configuration
      * @param $expectation
      */
-    public function testAfterLoadingTheCorrectParametersHasBeenSet($configuration, $expectation)
+    public function testAfterLoadingTheCorrectParametersHasBeenSet($configuration, $expectation): void
     {
         $this->load($configuration);
 
@@ -46,17 +46,18 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
     /**
      * @return array
      */
-    public function getConfigurations()
+    public function getConfigurations(): array
     {
         $testCases = [];
 
-        /**
+        /*
          * Case 0
          * Repeated version with all majors and latest
          */
         $testCases[] = [
             [
                 'name' => 'test',
+                'commit-id' => '96c122f',
                 'versions' => [
                     'list' => ['v1', 'v3', 'v1', 'v2'],
                     'current' => 'latest',
@@ -65,6 +66,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             [
                 'parameters' => [
                     'microservice.name' => 'test',
+                    'microservice.commit_id' => '96c122f',
                     'microservice.debug' => false,
                     'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v3',
@@ -73,13 +75,14 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             ],
         ];
 
-        /**
+        /*
          * Case 1
          * Repeated versions with all majors and current version defined
          */
         $testCases[] = [
             [
                 'name' => 'test',
+                'commit-id' => 'unknown',
                 'versions' => [
                     'list' => ['v3', 'v1', 'v2', 'v2'],
                     'current' => 'v2',
@@ -88,6 +91,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             [
                 'parameters' => [
                     'microservice.name' => 'test',
+                    'microservice.commit_id' => 'unknown',
                     'microservice.debug' => false,
                     'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v2',
@@ -96,7 +100,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             ],
         ];
 
-        /**
+        /*
          * Case 2
          * Single version and current version defined
          */
@@ -120,7 +124,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             ],
         ];
 
-        /**
+        /*
          * Case 3
          * Deeper version and current set as latest
          */
@@ -144,7 +148,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             ],
         ];
 
-        /**
+        /*
          * Case 4
          * Repeated versions and current set as latest
          */
@@ -168,7 +172,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             ],
         ];
 
-        /**
+        /*
          * Case 5
          * Unstable versions and current version set as latest that should result in a stable current version
          */
@@ -192,7 +196,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             ],
         ];
 
-        /**
+        /*
          * Case 6
          * Unstable versions and current version defined with unstable version
          */
@@ -216,7 +220,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             ],
         ];
 
-        /**
+        /*
          * Case 7
          * Unstable versions and current version set as latest
          */
@@ -240,7 +244,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             ],
         ];
 
-        /**
+        /*
          * Case 8
          * Manage exceptions is disabled
          */
@@ -271,7 +275,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
     /**
      * @inheritDoc
      */
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
         return [
             new MicroserviceExtension(['controllers', 'listeners']),

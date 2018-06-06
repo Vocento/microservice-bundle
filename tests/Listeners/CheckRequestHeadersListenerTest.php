@@ -11,6 +11,7 @@
 
 namespace Vocento\MicroserviceBundle\Tests\Listeners;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -31,7 +32,7 @@ class CheckRequestHeadersListenerTest extends TestCase
     /**
      * @test
      */
-    public function shouldAddServiceNameHeaderIfIsMaster()
+    public function shouldAddServiceNameHeaderIfIsMaster(): void
     {
         $event = $this->createResponseEvent();
 
@@ -42,14 +43,14 @@ class CheckRequestHeadersListenerTest extends TestCase
     }
 
     /**
+     * @param bool $master
+     *
      * @return GetResponseEvent
      */
-    private function createResponseEvent($master = true)
+    private function createResponseEvent(bool $master = true): GetResponseEvent
     {
-        /** @var HttpKernelInterfacer $kernel */
-        $kernel = $this->getMockBuilder(HttpKernelInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        /** @var MockObject|HttpKernelInterface $kernel */
+        $kernel = $this->createMock(HttpKernelInterface::class);
 
         $request = new Request();
 
@@ -59,7 +60,7 @@ class CheckRequestHeadersListenerTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotAddServiceNameHeaderIfIsNotMaster()
+    public function shouldNotAddServiceNameHeaderIfIsNotMaster(): void
     {
         $event = $this->createResponseEvent(false);
 
@@ -71,7 +72,7 @@ class CheckRequestHeadersListenerTest extends TestCase
     /**
      * @test
      */
-    public function shouldAddRequestIdHeaderIfNotPresentAndIsMaster()
+    public function shouldAddRequestIdHeaderIfNotPresentAndIsMaster(): void
     {
         $event = $this->createResponseEvent();
 
@@ -84,7 +85,7 @@ class CheckRequestHeadersListenerTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotAddRequestIdHeaderIfIsNotMaster()
+    public function shouldNotAddRequestIdHeaderIfIsNotMaster(): void
     {
         $event = $this->createResponseEvent(false);
 

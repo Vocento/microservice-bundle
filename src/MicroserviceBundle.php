@@ -11,6 +11,7 @@
 
 namespace Vocento\MicroserviceBundle;
 
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Vocento\MicroserviceBundle\DependencyInjection\MicroserviceExtension;
 
 /**
@@ -21,7 +22,7 @@ class MicroserviceBundle extends AbstractMicroserviceBundle
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName(): string
     {
         return 'MicroserviceBundle';
     }
@@ -29,8 +30,8 @@ class MicroserviceBundle extends AbstractMicroserviceBundle
     /**
      * @inheritDoc
      */
-    public function getContainerExtension()
+    public function getContainerExtension(): ExtensionInterface
     {
-        return new MicroserviceExtension(array('controllers', 'listeners'));
+        return new MicroserviceExtension(['controllers', 'listeners']);
     }
 }

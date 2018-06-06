@@ -20,30 +20,41 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 final class ServiceController extends AbstractController
 {
     /** @var string */
+    private $commitId;
+
+    /** @var string */
     private $serviceName;
 
     /** @var array */
     private $versions;
 
     /**
-     * MicroserviceController constructor.
+     * ServiceController constructor.
      *
      * @param string $serviceName
-     * @param array $versions
+     * @param string $commitId
+     * @param array  $versions
      * @param string $currentVersion
+     *
+     * @throws \Assert\AssertionFailedException
      */
-    public function __construct($serviceName, array $versions, $currentVersion)
-    {
+    public function __construct(
+        string $serviceName,
+        string $commitId,
+        array $versions,
+        string $currentVersion
+    ) {
         parent::__construct(0, $currentVersion);
 
         $this->setServiceName($serviceName);
         $this->setVersions($versions);
+        $this->setCommitId($commitId);
     }
 
     /**
-     * @param $serviceName
+     * @param string $serviceName
      */
-    private function setServiceName($serviceName)
+    private function setServiceName(string $serviceName): void
     {
         \Assert\that($serviceName)
             ->string()
@@ -54,11 +65,13 @@ final class ServiceController extends AbstractController
 
     /**
      * @param array $versions
+     *
+     * @throws \Assert\AssertionFailedException
      */
-    private function setVersions(array $versions)
+    private function setVersions(array $versions): void
     {
         Assertion::isArray($versions);
-        Assertion::greaterOrEqualThan(count($versions), 1);
+        Assertion::greaterOrEqualThan(\count($versions), 1);
 
         $this->versions = [];
 
@@ -69,17 +82,38 @@ final class ServiceController extends AbstractController
     }
 
     /**
-     * @return JsonResponse
+     * @param string $commitId
      */
-    public function serviceAction()
+    private function setCommitId(string $commitId): void
     {
-        return new JsonResponse(['service' => ['current' => $this->getVersion(), 'name' => $this->serviceName, 'versions' => $this->versions]]);
+        \Assert\that($commitId)
+            ->string()
+            ->notBlank();
+
+        $this->commitId = $commitId;
     }
 
     /**
      * @return JsonResponse
      */
-    public function nameAction()
+    public function serviceAction(): JsonResponse
+    {
+        return new JsonResponse(
+            [
+                'service' => [
+                    'current' => $this->getVersion(),
+                    'name' => $this->serviceName,
+                    'commit-id' => $this->commitId,
+                    'versions' => $this->versions,
+                ],
+            ]
+        );
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function nameAction(): JsonResponse
     {
         return new JsonResponse(['service' => ['name' => $this->serviceName]]);
     }
@@ -87,7 +121,7 @@ final class ServiceController extends AbstractController
     /**
      * @return JsonResponse
      */
-    public function currentVersionAction()
+    public function currentVersionAction(): JsonResponse
     {
         return new JsonResponse(['service' => ['version' => $this->getVersion()]]);
     }
@@ -95,7 +129,7 @@ final class ServiceController extends AbstractController
     /**
      * @return JsonResponse
      */
-    public function versionsAction()
+    public function versionsAction(): JsonResponse
     {
         return new JsonResponse(['service' => ['current' => $this->getVersion(), 'versions' => $this->versions]]);
     }

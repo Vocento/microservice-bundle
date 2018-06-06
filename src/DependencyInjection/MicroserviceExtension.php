@@ -27,14 +27,14 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 class MicroserviceExtension implements ExtensionInterface
 {
     /** @var array */
-    private $configFiles = array();
+    private $configFiles;
 
     /**
      * MicroserviceExtension constructor.
      *
      * @param array $configFiles
      */
-    public function __construct(array $configFiles = array())
+    public function __construct(array $configFiles = [])
     {
         $this->configFiles = $configFiles;
     }
@@ -42,12 +42,20 @@ class MicroserviceExtension implements ExtensionInterface
     /**
      * @inheritDoc
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(
-                __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'Resources'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'services'
+                __DIR__
+                .\DIRECTORY_SEPARATOR
+                .'..'
+                .\DIRECTORY_SEPARATOR
+                .'Resources'
+                .\DIRECTORY_SEPARATOR
+                .'config'
+                .\DIRECTORY_SEPARATOR
+                .'services'
             )
         );
 
@@ -60,19 +68,23 @@ class MicroserviceExtension implements ExtensionInterface
         $container->setParameter('microservice.name', $config['name']);
         $container->setParameter('microservice.debug', ($config['debug'] ? true : false));
         $container->setParameter('microservice.manage_exceptions', ($config['manage_exceptions'] ? true : false));
+        $container->setParameter('microservice.commit_id', $config['commit_id'] ?? 'unknown');
 
         $versions = $this->normalizeVersions($config['versions']['list']);
         $container->setParameter('microservice.versions.list', $versions);
-        $container->setParameter('microservice.versions.current', $this->getCurrentVersion($config['versions']['current'], $versions));
+        $container->setParameter(
+            'microservice.versions.current',
+            $this->getCurrentVersion($config['versions']['current'], $versions)
+        );
     }
 
     /**
      * @param ConfigurationInterface $configuration
-     * @param array $config
+     * @param array                  $config
      *
      * @return array
      */
-    protected function processConfiguration(ConfigurationInterface $configuration, array $config)
+    protected function processConfiguration(ConfigurationInterface $configuration, array $config): array
     {
         $processor = new Processor();
 
@@ -84,23 +96,26 @@ class MicroserviceExtension implements ExtensionInterface
      *
      * @return array
      */
-    private function normalizeVersions(array $versions)
+    private function normalizeVersions(array $versions): array
     {
         // Sort versions
         $versions = Semver::sort($versions);
 
         $versionParser = new VersionParser();
-        $versionsCount = count($versions);
+        $versionsCount = \count($versions);
 
         $removedVersionsKey = [];
 
-        for ($i = 0; $i < $versionsCount; $i++) {
-            for ($j = $i + 1; $j < $versionsCount; $j++) {
-                if ($i === $j || in_array($j, $removedVersionsKey)) {
+        for ($i = 0; $i < $versionsCount; ++$i) {
+            for ($j = $i + 1; $j < $versionsCount; ++$j) {
+                if ($i === $j || \in_array($j, $removedVersionsKey, true)) {
                     continue;
                 }
 
-                if (Comparator::equalTo($versionParser->normalize($versions[$i], true), $versionParser->normalize($versions[$j]))) {
+                if (Comparator::equalTo(
+                    $versionParser->normalize($versions[$i]),
+                    $versionParser->normalize($versions[$j])
+                )) {
                     $removedVersionsKey[] = $j;
                 }
             }
@@ -110,18 +125,18 @@ class MicroserviceExtension implements ExtensionInterface
             unset($versions[$key]);
         }
 
-        return array_values($versions);
+        return \array_values($versions);
     }
 
     /**
      * @param string $currentVersion
-     * @param array $versions
+     * @param array  $versions
      *
      * @return string
      */
-    private function getCurrentVersion($currentVersion, array $versions)
+    private function getCurrentVersion($currentVersion, array $versions): string
     {
-        if ('latest' === strtolower($currentVersion) && count($versions)) {
+        if ('latest' === \strtolower($currentVersion) && \count($versions)) {
             $versions = Semver::rsort($versions);
             foreach ($versions as $version) {
                 if ('stable' === VersionParser::parseStability($version)) {
@@ -129,16 +144,16 @@ class MicroserviceExtension implements ExtensionInterface
                 }
             }
 
-            return array_shift($versions);
+            return \array_shift($versions);
         }
 
         return $currentVersion;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return 'http://example.org/schema/dic/'.$this->getAlias();
     }
@@ -146,7 +161,7 @@ class MicroserviceExtension implements ExtensionInterface
     /**
      * @inheritDoc
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'microservice';
     }
@@ -154,7 +169,7 @@ class MicroserviceExtension implements ExtensionInterface
     /**
      * @inheritDoc
      */
-    public function getXsdValidationBasePath()
+    public function getXsdValidationBasePath(): string
     {
         return 'http://example.org/schema/dic/'.$this->getAlias();
     }

@@ -28,10 +28,12 @@ abstract class AbstractController
     /**
      * AbstractController constructor.
      *
-     * @param int $sharedMaxAge
+     * @param int    $sharedMaxAge
      * @param string $version
+     *
+     * @throws \Assert\AssertionFailedException
      */
-    public function __construct($sharedMaxAge, $version)
+    public function __construct(int $sharedMaxAge, string $version)
     {
         $this->setSharedMaxAge($sharedMaxAge);
         $this->setVersion($version);
@@ -40,17 +42,19 @@ abstract class AbstractController
     /**
      * @param int $sharedMaxAge
      */
-    private function setSharedMaxAge($sharedMaxAge)
+    private function setSharedMaxAge($sharedMaxAge): void
     {
-        if (is_int($sharedMaxAge) && $sharedMaxAge > 0) {
+        if (\is_int($sharedMaxAge) && $sharedMaxAge > 0) {
             $this->sharedMaxAge = $sharedMaxAge;
         }
     }
 
     /**
-     * @param $version
+     * @param string $version
+     *
+     * @throws \Assert\AssertionFailedException
      */
-    private function setVersion($version)
+    private function setVersion(string $version): void
     {
         Assertion::regex($version, '/^v(\d+\.)?(\d+\.)?(\d+)$/');
 
@@ -60,7 +64,7 @@ abstract class AbstractController
     /**
      * @return string
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->version;
     }
@@ -68,29 +72,35 @@ abstract class AbstractController
     /**
      * @return string
      */
-    public function getMajorVersion()
+    public function getMajorVersion(): string
     {
-        return strtok($this->version, '.');
+        return \strtok($this->version, '.');
     }
 
     /**
      * @param array $data
-     * @param int $status
+     * @param int   $status
      * @param array $headers
-     * @param int $sharedMaxAge
+     * @param int   $sharedMaxAge
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      */
-    public function getJsonResponse(array $data, $status = 200, array $headers = [], $sharedMaxAge = 0)
-    {
-        return JsonResponse::create($data, $status, $headers)
-            ->setSharedMaxAge($sharedMaxAge);
+    public function getJsonResponse(
+        array $data,
+        int $status = 200,
+        array $headers = [],
+        int $sharedMaxAge = 0
+    ): JsonResponse {
+        $response = JsonResponse::create($data, $status, $headers);
+        $response->setSharedMaxAge($sharedMaxAge);
+
+        return $response;
     }
 
     /**
      * @return int
      */
-    protected function getSharedMaxAge()
+    protected function getSharedMaxAge(): int
     {
         return $this->sharedMaxAge;
     }

@@ -28,6 +28,7 @@
         }
     },
     "require": {
+        "php": ">=7.1.0",
         "symfony/symfony": "^3.4|^4.0",
         "beberlei/assert": "~2.6",
         "vocento/request-id": "^1.0",

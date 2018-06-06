@@ -24,6 +24,7 @@ final class CheckRequestHeadersListener
 
     /**
      * CheckRequestIdOrCreateListener constructor.
+     *
      * @param string $serviceName
      */
     public function __construct($serviceName)

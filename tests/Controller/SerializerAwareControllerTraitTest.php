@@ -12,6 +12,7 @@
 namespace Vocento\MicroserviceBundle\Tests\Controller;
 
 use JMS\Serializer\SerializerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Vocento\MicroserviceBundle\Controller\SerializerAwareControllerTrait;
 
@@ -23,30 +24,33 @@ class SerializerAwareControllerTraitTest extends TestCase
     /**
      * @test
      */
-    public function whenCallingSerializeWithoutSerializerShouldReturnNull()
+    public function whenCallingSerializeWithoutSerializerShouldReturnNull(): void
     {
+        /** @var SerializerAwareControllerTrait $trait */
         $trait = $this->createTraitStub();
 
-        $this->assertNull($trait->serializeObject(['test' => '1'], 'v1', ['group1', 'group2']));
+        static::assertNull($trait->serializeObject(['test' => '1'], 'v1', ['group1', 'group2']));
     }
 
     /**
-     * Create trait stub
+     * Create trait stub.
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject|SerializerAwareControllerTrait
      */
-    private function createTraitStub()
+    private function createTraitStub(): MockObject
     {
-        $trait = $this->getMockForTrait(SerializerAwareControllerTrait::class);
-
-        return $trait;
+        return $this->getMockForTrait(SerializerAwareControllerTrait::class);
     }
 
     /**
      * @test
      * @dataProvider serializationCases
+     *
+     * @param mixed  $object
+     * @param string $version
+     * @param array  $groups
      */
-    public function whenCallingSerializeWithSerializerShouldReturnJson($object, $version, $groups)
+    public function whenCallingSerializeWithSerializerShouldReturnJson($object, string $version, array $groups): void
     {
         $serializer = $this->createSerializerMock();
         $serializer->expects($this->once())->method('serialize');
@@ -58,18 +62,22 @@ class SerializerAwareControllerTraitTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject|SerializerInterface
      */
-    private function createSerializerMock()
+    private function createSerializerMock(): MockObject
     {
-        return $this->getMockBuilder(SerializerInterface::class)
-            ->getMock();
+        $serializerMock = $this->createMock(SerializerInterface::class);
+        $serializerMock->expects(static::any())
+            ->method('serialize')
+            ->willReturn('');
+
+        return $serializerMock;
     }
 
     /**
      * @return array
      */
-    public function serializationCases()
+    public function serializationCases(): array
     {
         return [
             [['test' => '1'], 'v1', ['group1', 'group2']],
