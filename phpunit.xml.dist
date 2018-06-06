@@ -10,20 +10,24 @@
         <ini name="error_reporting" value="-1" />
     </php>
 
+    <logging>
+        <log type="junit" target="build/test/coverage.xml" logIncompleteSkipped="true" />
+        <log type="testdox-text" target="build/test/testdox.txt" />
+        <log type="testdox-html" target="build/test/testdox.html" />
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true" />
+        <log type="coverage-html" target="build/test/coverage" lowUpperBound="50" highLowerBound="90" />
+        <log type="coverage-clover" target="build/test/clover.xml" />
+    </logging>
+
     <testsuites>
-        <testsuite name="Microservice Bundle Test Suite">
-            <directory>./tests/</directory>
+        <testsuite name="Content Domain Test Suite">
+            <directory>tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./</directory>
-            <exclude>
-                <directory>./docs</directory>
-                <directory>./tests</directory>
-                <directory>./vendor</directory>
-            </exclude>
+            <directory>src</directory>
         </whitelist>
     </filter>
 </phpunit>

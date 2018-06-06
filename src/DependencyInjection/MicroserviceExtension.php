@@ -68,7 +68,7 @@ class MicroserviceExtension implements ExtensionInterface
         $container->setParameter('microservice.name', $config['name']);
         $container->setParameter('microservice.debug', ($config['debug'] ? true : false));
         $container->setParameter('microservice.manage_exceptions', ($config['manage_exceptions'] ? true : false));
-        $container->setParameter('microservice.commit_id', $config['commit_id'] ?? 'unknown');
+        $container->setParameter('microservice.code_version', $config['code_version']);
 
         $versions = $this->normalizeVersions($config['versions']['list']);
         $container->setParameter('microservice.versions.list', $versions);

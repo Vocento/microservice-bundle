@@ -6,4 +6,4 @@ services:
             - '%microservice.name%'
             - '%microservice.versions.list%'
             - '%microservice.versions.current%'
-            - '%microservice.commit_id%'
+            - '%microservice.code_version%'

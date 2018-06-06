@@ -57,7 +57,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         $testCases[] = [
             [
                 'name' => 'test',
-                'commit-id' => '96c122f',
+                'code_version' => '96c122f',
                 'versions' => [
                     'list' => ['v1', 'v3', 'v1', 'v2'],
                     'current' => 'latest',
@@ -66,7 +66,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             [
                 'parameters' => [
                     'microservice.name' => 'test',
-                    'microservice.commit_id' => '96c122f',
+                    'microservice.code_version' => '96c122f',
                     'microservice.debug' => false,
                     'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v3',
@@ -82,7 +82,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         $testCases[] = [
             [
                 'name' => 'test',
-                'commit-id' => 'unknown',
+                'code_version' => 'unknown',
                 'versions' => [
                     'list' => ['v3', 'v1', 'v2', 'v2'],
                     'current' => 'v2',
@@ -91,7 +91,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
             [
                 'parameters' => [
                     'microservice.name' => 'test',
-                    'microservice.commit_id' => 'unknown',
+                    'microservice.code_version' => 'unknown',
                     'microservice.debug' => false,
                     'microservice.manage_exceptions' => true,
                     'microservice.versions.current' => 'v2',

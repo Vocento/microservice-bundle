@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 final class ServiceController extends AbstractController
 {
     /** @var string */
-    private $commitId;
+    private $codeVersion;
 
     /** @var string */
     private $serviceName;
@@ -32,7 +32,7 @@ final class ServiceController extends AbstractController
      * ServiceController constructor.
      *
      * @param string $serviceName
-     * @param string $commitId
+     * @param string $codeVersion
      * @param array  $versions
      * @param string $currentVersion
      *
@@ -40,7 +40,7 @@ final class ServiceController extends AbstractController
      */
     public function __construct(
         string $serviceName,
-        string $commitId,
+        string $codeVersion,
         array $versions,
         string $currentVersion
     ) {
@@ -48,7 +48,7 @@ final class ServiceController extends AbstractController
 
         $this->setServiceName($serviceName);
         $this->setVersions($versions);
-        $this->setCommitId($commitId);
+        $this->setCodeVersion($codeVersion);
     }
 
     /**
@@ -82,15 +82,15 @@ final class ServiceController extends AbstractController
     }
 
     /**
-     * @param string $commitId
+     * @param string $codeVersion
      */
-    private function setCommitId(string $commitId): void
+    private function setCodeVersion(string $codeVersion): void
     {
-        \Assert\that($commitId)
+        \Assert\that($codeVersion)
             ->string()
             ->notBlank();
 
-        $this->commitId = $commitId;
+        $this->codeVersion = $codeVersion;
     }
 
     /**
@@ -103,7 +103,7 @@ final class ServiceController extends AbstractController
                 'service' => [
                     'current' => $this->getVersion(),
                     'name' => $this->serviceName,
-                    'commit-id' => $this->commitId,
+                    'code' => $this->codeVersion,
                     'versions' => $this->versions,
                 ],
             ]
