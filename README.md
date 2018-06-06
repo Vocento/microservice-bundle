@@ -46,6 +46,7 @@ Add the bundle configuration to your `config.yml` file
 
 microservice:
     name: 'your-microservice-name'
+    commit_id: '0000000'           # use a .env parameter to set this value
     debug: false                   # when true will show exception information
     manage_exceptions: true
     versions:
@@ -73,6 +74,24 @@ microservice:
 This configuration will expose three endpoints related with the service in order
 to enable a way to auto-discover the service, the available versions and the current
 version.
+
+#### Service endpoint
+
+Request
+`GET /service`
+
+Response 
+```json
+{
+    "name": "service-name",
+    "commit-id": "0000000",
+    "versions": [
+        "v1",
+        "v2"
+    ],
+    "current": "v2"
+}
+```
 
 #### Service name endpoint
 
