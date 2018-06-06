@@ -11,6 +11,7 @@
 
 namespace Vocento\MicroserviceBundle\Tests\Listeners;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +34,7 @@ class SetResponseHeadersListenerTest extends TestCase
     /**
      * @test
      */
-    public function shouldAddRequestIdIfIsMaster()
+    public function shouldAddRequestIdIfIsMaster(): void
     {
         $event = $this->createFilteredResponseEvent();
 
@@ -49,12 +50,10 @@ class SetResponseHeadersListenerTest extends TestCase
      *
      * @return FilterResponseEvent
      */
-    private function createFilteredResponseEvent($master = true, $addRequestId = true)
+    private function createFilteredResponseEvent(bool $master = true, bool $addRequestId = true): FilterResponseEvent
     {
-        /** @var HttpKernelInterfacer $kernel */
-        $kernel = $this->getMockBuilder(HttpKernelInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        /** @var MockObject|HttpKernelInterface $kernel */
+        $kernel = $this->createMock(HttpKernelInterface::class);
 
         $request = new Request();
 
@@ -75,7 +74,7 @@ class SetResponseHeadersListenerTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotAddRequestIdHeaderIfIsNotMaster()
+    public function shouldNotAddRequestIdHeaderIfIsNotMaster(): void
     {
         $event = $this->createFilteredResponseEvent(false);
 
@@ -87,7 +86,7 @@ class SetResponseHeadersListenerTest extends TestCase
     /**
      * @test
      */
-    public function shouldCreateRequestIdWhenDoesNotExistsInRequest()
+    public function shouldCreateRequestIdWhenDoesNotExistsInRequest(): void
     {
         $event = $this->createFilteredResponseEvent(true, false);
 
@@ -102,7 +101,7 @@ class SetResponseHeadersListenerTest extends TestCase
     protected function setUp()
     {
         $this->serviceName = 'test-service-name';
-        $this->listener = new SetResponseHeadersListener($this->serviceName);
+        $this->listener = new SetResponseHeadersListener();
     }
 
     /**

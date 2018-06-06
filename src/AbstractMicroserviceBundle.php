@@ -28,56 +28,56 @@ abstract class AbstractMicroserviceBundle implements BundleInterface
     /**
      * @inheritDoc
      */
-    public function boot()
+    public function boot(): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function shutdown()
+    public function shutdown(): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function getContainerExtension()
+    public function getContainerExtension(): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): void
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function getNamespace()
+    public function getNamespace(): string
     {
-        $class = get_class($this);
+        $class = \get_class($this);
 
-        return substr($class, 0, strrpos($class, '\\'));
+        return \substr($class, 0, \strrpos($class, '\\'));
     }
 
     /**
      * @inheritDoc
      */
-    public function getPath()
+    public function getPath(): string
     {
         if (null === $this->path) {
             $reflected = new \ReflectionObject($this);
-            $this->path = dirname($reflected->getFileName());
+            $this->path = \dirname($reflected->getFileName());
         }
 
         return $this->path;

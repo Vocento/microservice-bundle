@@ -23,9 +23,11 @@ class Configuration implements ConfigurationInterface
     /**
      * @inheritDoc
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
+
+        /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->root('microservice');
 
         $rootNode
@@ -33,6 +35,10 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('name')
                     ->info('Service name')
                     ->isRequired()
+                ->end()
+                ->scalarNode('commit_id')
+                    ->info('Commit Id')
+                    ->defaultValue('unknown')
                 ->end()
                 ->booleanNode('debug')
                     ->info('Enable debug mode')
@@ -53,7 +59,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @param ArrayNodeDefinition $rootNode
      */
-    private function addVersionSection(ArrayNodeDefinition $rootNode)
+    private function addVersionSection(ArrayNodeDefinition $rootNode): void
     {
         $rootNode
             ->children()

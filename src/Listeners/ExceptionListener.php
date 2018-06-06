@@ -33,8 +33,8 @@ final class ExceptionListener
     /**
      * ExceptionListener constructor.
      *
-     * @param bool $debug
-     * @param bool $manageExceptions
+     * @param bool            $debug
+     * @param bool            $manageExceptions
      * @param LoggerInterface $logger
      */
     public function __construct($debug = false, $manageExceptions = true, LoggerInterface $logger = null)
@@ -46,6 +46,7 @@ final class ExceptionListener
 
     /**
      * @param GetResponseForExceptionEvent $event
+     *
      * @throws \InvalidArgumentException
      */
     public function onKernelException(GetResponseForExceptionEvent $event): void
@@ -77,7 +78,7 @@ final class ExceptionListener
      */
     private function logException(\Exception $exception): void
     {
-        $message = sprintf(
+        $message = \sprintf(
             'Uncaught PHP Exception %s: "%s" at %s line %s',
             \get_class($exception),
             $exception->getMessage(),
@@ -87,9 +88,9 @@ final class ExceptionListener
 
         if (null !== $this->logger) {
             if (!$exception instanceof HttpExceptionInterface || $exception->getStatusCode() >= 500) {
-                $this->logger->critical($message, array('exception' => $exception));
+                $this->logger->critical($message, ['exception' => $exception]);
             } else {
-                $this->logger->error($message, array('exception' => $exception));
+                $this->logger->error($message, ['exception' => $exception]);
             }
         }
     }
