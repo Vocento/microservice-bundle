@@ -25,7 +25,7 @@ class ServiceControllerTest extends TestCase
      * @dataProvider invalidConstructorArguments
      *
      * @param string $serviceName
-     * @param string $commitId
+     * @param string $codeVersion
      * @param array  $versions
      * @param string $currentVersion
      *
@@ -35,11 +35,11 @@ class ServiceControllerTest extends TestCase
      */
     public function invalidServiceControllerArgumentsShouldThrowException(
         $serviceName,
-        $commitId,
+        $codeVersion,
         array $versions,
         $currentVersion
     ): ServiceController {
-        new ServiceController($serviceName, $commitId, $versions, $currentVersion);
+        new ServiceController($serviceName, $codeVersion, $versions, $currentVersion);
     }
 
     /**
@@ -47,7 +47,7 @@ class ServiceControllerTest extends TestCase
      * @dataProvider validConstructorArguments
      *
      * @param string $serviceName
-     * @param string $commitId
+     * @param string $codeVersion
      * @param array  $versions
      * @param string $currentVersion
      *
@@ -55,11 +55,11 @@ class ServiceControllerTest extends TestCase
      */
     public function serviceActionShouldReturnJsonResponse(
         string $serviceName,
-        string $commitId,
+        string $codeVersion,
         array $versions,
         string $currentVersion
     ): void {
-        $controller = $this->createController($serviceName, $commitId, $versions, $currentVersion);
+        $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->serviceAction();
 
         $this->assertEquals(
@@ -68,7 +68,7 @@ class ServiceControllerTest extends TestCase
                     'service' => [
                         'current' => $currentVersion,
                         'name' => $serviceName,
-                        'commit-id' => $commitId,
+                        'code' => $codeVersion,
                         'versions' => $versions,
                     ],
                 ]
@@ -79,7 +79,7 @@ class ServiceControllerTest extends TestCase
 
     /**
      * @param string $serviceName
-     * @param string $commitId
+     * @param string $codeVersion
      * @param array  $versions
      * @param string $currentVersion
      *
@@ -89,11 +89,11 @@ class ServiceControllerTest extends TestCase
      */
     private function createController(
         string $serviceName,
-        string $commitId,
+        string $codeVersion,
         array $versions,
         string $currentVersion
     ): ServiceController {
-        return new ServiceController($serviceName, $commitId, $versions, $currentVersion);
+        return new ServiceController($serviceName, $codeVersion, $versions, $currentVersion);
     }
 
     /**
@@ -101,7 +101,7 @@ class ServiceControllerTest extends TestCase
      * @dataProvider validConstructorArguments
      *
      * @param string $serviceName
-     * @param string $commitId
+     * @param string $codeVersion
      * @param array  $versions
      * @param string $currentVersion
      *
@@ -109,11 +109,11 @@ class ServiceControllerTest extends TestCase
      */
     public function nameActionShouldReturnJsonResponse(
         string $serviceName,
-        string $commitId,
+        string $codeVersion,
         array $versions,
         string $currentVersion
     ): void {
-        $controller = $this->createController($serviceName, $commitId, $versions, $currentVersion);
+        $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->nameAction();
 
         $this->assertEquals(\json_encode(['service' => ['name' => $serviceName]]), $response->getContent());
@@ -124,7 +124,7 @@ class ServiceControllerTest extends TestCase
      * @dataProvider validConstructorArguments
      *
      * @param string $serviceName
-     * @param string $commitId
+     * @param string $codeVersion
      * @param array  $versions
      * @param string $currentVersion
      *
@@ -132,11 +132,11 @@ class ServiceControllerTest extends TestCase
      */
     public function versionsActionShouldReturnJsonResponse(
         string $serviceName,
-        string $commitId,
+        string $codeVersion,
         array $versions,
         string $currentVersion
     ): void {
-        $controller = $this->createController($serviceName, $commitId, $versions, $currentVersion);
+        $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->versionsAction();
 
         $this->assertEquals(
@@ -150,7 +150,7 @@ class ServiceControllerTest extends TestCase
      * @dataProvider validConstructorArguments
      *
      * @param string $serviceName
-     * @param string $commitId
+     * @param string $codeVersion
      * @param array  $versions
      * @param string $currentVersion
      *
@@ -158,11 +158,11 @@ class ServiceControllerTest extends TestCase
      */
     public function currentVersionActionShouldReturnJsonResponse(
         string $serviceName,
-        string $commitId,
+        string $codeVersion,
         array $versions,
         string $currentVersion
     ): void {
-        $controller = $this->createController($serviceName, $commitId, $versions, $currentVersion);
+        $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->currentVersionAction();
 
         $this->assertEquals(\json_encode(['service' => ['version' => $currentVersion]]), $response->getContent());
@@ -173,13 +173,13 @@ class ServiceControllerTest extends TestCase
      */
     public function invalidConstructorArguments(): \Generator
     {
-        yield ['',     '', [],     ''];
-        yield ['',     '', [],     'v1'];
-        yield ['',     '', ['v1'], 'v1'];
-        yield ['name', '', [],     ''];
-        yield ['name', '', [],     'v1'];
+        yield ['', '', [], ''];
+        yield ['', '', [], 'v1'];
+        yield ['', '', ['v1'], 'v1'];
+        yield ['name', '', [], ''];
+        yield ['name', '', [], 'v1'];
         yield ['name', '', ['v1'], ''];
-        yield ['name', '', ['v'],  'v1'];
+        yield ['name', '', ['v'], 'v1'];
         yield ['name', '', ['v1'], 'v'];
     }
 
