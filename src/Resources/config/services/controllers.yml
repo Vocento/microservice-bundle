@@ -4,6 +4,6 @@ services:
         public: true
         arguments:
             - '%microservice.name%'
+            - '%microservice.code_version%'
             - '%microservice.versions.list%'
             - '%microservice.versions.current%'
-            - '%microservice.code_version%'
