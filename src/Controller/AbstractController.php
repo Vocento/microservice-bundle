@@ -91,10 +91,10 @@ abstract class AbstractController
         array $headers = [],
         int $sharedMaxAge = 0
     ): JsonResponse {
-        $response = JsonResponse::create($data, $status, $headers);
-        $response->setSharedMaxAge($sharedMaxAge);
+        $json = \json_encode($data, \JSON_PRESERVE_ZERO_FRACTION);
 
-        return $response;
+        return JsonResponse::fromJsonString($json, $status, $headers)
+            ->setSharedMaxAge($sharedMaxAge);
     }
 
     /**
