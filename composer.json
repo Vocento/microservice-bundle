@@ -28,8 +28,8 @@
         }
     },
     "require": {
-        "php": ">=7.1.0",
-        "symfony/symfony": "^3.4|^4.0",
+        "php": "^7.1.0",
+        "symfony/framework-bundle": "^3.4|^4.1",
         "beberlei/assert": "~2.6",
         "vocento/request-id": "^1.0",
         "composer/semver": "~1.4",
