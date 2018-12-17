@@ -13,6 +13,7 @@ namespace Vocento\MicroserviceBundle;
 
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
@@ -49,7 +50,7 @@ abstract class AbstractMicroserviceBundle implements BundleInterface
     /**
      * @inheritDoc
      */
-    public function getContainerExtension(): void
+    public function getContainerExtension(): ExtensionInterface
     {
     }
 
