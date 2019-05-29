@@ -25,10 +25,10 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('microservice');
+        $treeBuilder = new TreeBuilder();
 
         /** @var ArrayNodeDefinition $rootNode */
-        $rootNode = $treeBuilder->getRootNode();
+        $rootNode = $treeBuilder->root('microservice');
 
         $rootNode
             ->children()
@@ -48,8 +48,7 @@ class Configuration implements ConfigurationInterface
                     ->info('Manage exceptions')
                     ->defaultTrue()
                 ->end()
-            ->end()
-        ;
+            ->end();
 
         $this->addVersionSection($rootNode);
 
