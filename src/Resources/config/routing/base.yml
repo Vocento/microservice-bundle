@@ -1,19 +1,19 @@
 service:
     path: '/service'
-    defaults: { _controller: 'vocento.service.controller::serviceAction' }
+    defaults: { _controller: 'vocento.service.controller:serviceAction' }
     methods: ['GET']
 
 service.name:
     path: '/service/name'
-    defaults: { _controller: 'vocento.service.controller::nameAction' }
+    defaults: { _controller: 'vocento.service.controller:nameAction' }
     methods: ['GET']
 
 service.versions.list:
     path: '/service/versions'
-    defaults: { _controller: 'vocento.service.controller::versionsAction' }
+    defaults: { _controller: 'vocento.service.controller:versionsAction' }
     methods: ['GET']
 
 service.versions.current:
     path: '/service/versions/current'
-    defaults: { _controller: 'vocento.service.controller::currentVersionAction' }
+    defaults: { _controller: 'vocento.service.controller:currentVersionAction' }
     methods: ['GET']
