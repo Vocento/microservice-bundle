@@ -29,15 +29,15 @@
     },
     "require": {
         "php": "^7.1.0",
-        "symfony/framework-bundle": "^3.4|^4.1",
+        "symfony/framework-bundle": "^4.2|^4.3|^4.4",
         "beberlei/assert": "~3.0",
-        "vocento/request-id": "^1.0",
+        "vocento/request-id": "^1.1",
         "composer/semver": "~1.4",
         "monolog/monolog": "~1.22"
     },
     "require-dev": {
-        "matthiasnoback/symfony-dependency-injection-test": "^2.0",
-        "phpunit/phpunit": "^6.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^3.1",
+        "phpunit/phpunit": "^7.5",
         "jms/serializer": "~1.1"
     },
     "config": {

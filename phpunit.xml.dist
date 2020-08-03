@@ -11,7 +11,7 @@
     </php>
 
     <logging>
-        <log type="junit" target="build/test/coverage.xml" logIncompleteSkipped="true" />
+        <log type="junit" target="build/test/coverage.xml" />
         <log type="testdox-text" target="build/test/testdox.txt" />
         <log type="testdox-html" target="build/test/testdox.html" />
         <log type="coverage-text" target="php://stdout" showUncoveredFiles="true" />
