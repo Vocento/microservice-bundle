@@ -13,7 +13,7 @@
             "email": "aferrandini@vocento.com"
         },
         {
-            "name": "Software architecture Department",
+            "name": "Software Architecture Department",
             "email": "arquitectura@vocento.com"
         }
     ],
@@ -28,12 +28,13 @@
         }
     },
     "require": {
-        "php": "^7.1.0",
-        "symfony/framework-bundle": "^4.2|^4.3|^4.4",
-        "beberlei/assert": "~3.0",
-        "vocento/request-id": "^1.1",
-        "composer/semver": "~1.4",
-        "monolog/monolog": "~1.22"
+        "php": "^7.1",
+        "ext-json": "*",
+        "beberlei/assert": "^3.0",
+        "composer/semver": "^1.4",
+        "monolog/monolog": "^1.2 || ^2.2",
+        "symfony/framework-bundle": "^4.2 || ^4.3 || ^4.4",
+        "vocento/request-id": "^1.1"
     },
     "require-dev": {
         "matthiasnoback/symfony-dependency-injection-test": "^3.1",
