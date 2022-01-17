@@ -14,12 +14,15 @@ namespace Vocento\MicroserviceBundle\Tests\Listeners;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Vocento\MicroserviceBundle\Listeners\CheckRequestHeadersListener;
 
 /**
- * @author Ariel Ferrandini <aferrandini@vocento.com>
+ * Class CheckRequestHeadersListenerTest.
+ *
+ * @author Arquitectura <arquitectura@vocento.com>
+ *
+ * @covers \Vocento\MicroserviceBundle\Listeners\CheckRequestHeadersListener
  */
 class CheckRequestHeadersListenerTest extends TestCase
 {
@@ -29,84 +32,70 @@ class CheckRequestHeadersListenerTest extends TestCase
     /** @var CheckRequestHeadersListener */
     private $listener;
 
-    /**
-     * @test
-     */
-    public function shouldAddServiceNameHeaderIfIsMaster(): void
+    public function testShouldAddServiceNameHeaderIfIsMaster(): void
     {
         $event = $this->createResponseEvent();
 
         $this->listener->onKernelRequest($event);
 
-        $this->assertArrayHasKey('service-name', $event->getRequest()->headers->all());
-        $this->assertEquals($this->serviceName, $event->getRequest()->headers->get('service-name'));
+        static::assertArrayHasKey('service-name', $event->getRequest()->headers->all());
+        static::assertEquals($this->serviceName, $event->getRequest()->headers->get('service-name'));
     }
 
-    /**
-     * @param bool $master
-     *
-     * @return GetResponseEvent
-     */
-    private function createResponseEvent(bool $master = true): GetResponseEvent
+    private function createResponseEvent(bool $isMasterRequest = true)
     {
         /** @var MockObject|HttpKernelInterface $kernel */
         $kernel = $this->createMock(HttpKernelInterface::class);
-
         $request = new Request();
+        $requestType = $isMasterRequest ? HttpKernelInterface::MASTER_REQUEST : HttpKernelInterface::SUB_REQUEST;
+        $eventClass = \class_exists('\\Symfony\\Component\\HttpKernel\\Event\\RequestEvent')
+            ? '\\Symfony\\Component\\HttpKernel\\Event\\RequestEvent'
+            : '\\Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent';
 
-        return new GetResponseEvent($kernel, $request, ($master ? HttpKernelInterface::MASTER_REQUEST : HttpKernelInterface::SUB_REQUEST));
+        return new $eventClass($kernel, $request, $requestType, new \RuntimeException());
     }
 
-    /**
-     * @test
-     */
-    public function shouldNotAddServiceNameHeaderIfIsNotMaster(): void
+    public function testShouldNotAddServiceNameHeaderIfIsNotMaster(): void
     {
         $event = $this->createResponseEvent(false);
 
         $this->listener->onKernelRequest($event);
 
-        $this->assertArrayNotHasKey('service-name', $event->getRequest()->headers->all());
+        static::assertArrayNotHasKey('service-name', $event->getRequest()->headers->all());
     }
 
-    /**
-     * @test
-     */
-    public function shouldAddRequestIdHeaderIfNotPresentAndIsMaster(): void
+    public function testShouldAddRequestIdHeaderIfNotPresentAndIsMaster(): void
     {
         $event = $this->createResponseEvent();
 
         $this->listener->onKernelRequest($event);
 
-        $this->assertArrayHasKey('request-id', $event->getRequest()->headers->all());
-        $this->assertNotEmpty($event->getRequest()->headers->get('request-id'));
+        static::assertArrayHasKey('request-id', $event->getRequest()->headers->all());
+        static::assertNotEmpty($event->getRequest()->headers->get('request-id'));
     }
 
-    /**
-     * @test
-     */
-    public function shouldNotAddRequestIdHeaderIfIsNotMaster(): void
+    public function testShouldNotAddRequestIdHeaderIfIsNotMaster(): void
     {
         $event = $this->createResponseEvent(false);
 
         $this->listener->onKernelRequest($event);
 
-        $this->assertArrayNotHasKey('request-id', $event->getRequest()->headers->all());
+        static::assertArrayNotHasKey('request-id', $event->getRequest()->headers->all());
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->serviceName = 'test-service-name';
         $this->listener = new CheckRequestHeadersListener($this->serviceName);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->listener = null;
     }

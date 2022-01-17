@@ -16,72 +16,57 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Vocento\MicroserviceBundle\Controller\AbstractController;
 
 /**
- * @author Ariel Ferrandini <aferrandini@vocento.com>
+ * Class AbstractControllerTest.
+ *
+ * @author Arquitectura <arquitectura@vocento.com>
+ *
+ * @covers \Vocento\MicroserviceBundle\Controller\AbstractController
  */
 class AbstractControllerTest extends TestCase
 {
     /**
-     * @test
-     * @expectedException \InvalidArgumentException
      * @dataProvider invalidVersions
-     *
-     * @param string $version
      */
-    public function invalidVersionShouldThrowException(string $version): void
+    public function testInvalidVersionShouldThrowException(string $version): void
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->getMockForAbstractClass(AbstractController::class, [0, $version]);
     }
 
     /**
-     * @test
      * @dataProvider validVersions
-     *
-     * @param string $version
      */
-    public function validVersionShouldReturnVersion(string $version): void
+    public function testValidVersionShouldReturnVersion(string $version): void
     {
-        $controller = $this->getMockForAbstractClass(
-            AbstractController::class,
-            [0, $version]
-        );
-        $this->assertEquals($version, $controller->getVersion());
+        /** @var AbstractController $controller */
+        $controller = $this->getMockForAbstractClass(AbstractController::class, [0, $version]);
+
+        static::assertEquals($version, $controller->getVersion());
     }
 
-    /**
-     * @test
-     */
-    public function sharedMaxAgeShouldReturnValue(): void
+    public function testSharedMaxAgeShouldReturnValue(): void
     {
-        $controller = $this->getMockForAbstractClass(
-            AbstractController::class,
-            [300, 'v1']
-        );
+        /** @var AbstractController $controller */
+        $controller = $this->getMockForAbstractClass(AbstractController::class, [300, 'v1']);
 
         $method = (new \ReflectionObject($controller))->getMethod('getSharedMaxAge');
         $method->setAccessible(true);
-        $this->assertEquals(300, $method->invoke($controller));
+
+        static::assertEquals(300, $method->invoke($controller));
     }
 
     /**
-     * @test
      * @dataProvider validVersions
-     *
-     * @param string $version
-     * @param string $majorVersion
      */
-    public function majorVersionShouldReturnMajorVersion(string $version, string $majorVersion): void
+    public function testMajorVersionShouldReturnMajorVersion(string $version, string $majorVersion): void
     {
-        $controller = $this->getMockForAbstractClass(
-            AbstractController::class,
-            [0, $version]
-        );
-        $this->assertEquals($majorVersion, $controller->getMajorVersion());
+        /** @var AbstractController $controller */
+        $controller = $this->getMockForAbstractClass(AbstractController::class, [0, $version]);
+
+        static::assertEquals($majorVersion, $controller->getMajorVersion());
     }
 
-    /**
-     * @test
-     */
-    public function shouldCreateJsonResponse(): void
+    public function testShouldCreateJsonResponse(): void
     {
         $data = ['data' => 'data'];
         $status = 201;
@@ -91,21 +76,17 @@ class AbstractControllerTest extends TestCase
         $response = new JsonResponse($data, $status, $headers);
         $response->setSharedMaxAge($sharedMaxAge);
 
-        $controller = $this->getMockForAbstractClass(
-            AbstractController::class,
-            [0, 'v1']
-        );
+        /** @var AbstractController $controller */
+        $controller = $this->getMockForAbstractClass(AbstractController::class, [0, 'v1']);
 
         $controllerResponse = $controller->getJsonResponse($data, $status, $headers, $sharedMaxAge);
-        $this->assertEquals($response->getContent(), $controllerResponse->getContent());
-        $this->assertEquals($response->getStatusCode(), $controllerResponse->getStatusCode());
-        $this->assertEquals($response->headers->all(), $controllerResponse->headers->all());
-        $this->assertEquals($response->getMaxAge(), $controllerResponse->getMaxAge());
+
+        static::assertEquals($response->getContent(), $controllerResponse->getContent());
+        static::assertEquals($response->getStatusCode(), $controllerResponse->getStatusCode());
+        static::assertEquals($response->headers->all(), $controllerResponse->headers->all());
+        static::assertEquals($response->getMaxAge(), $controllerResponse->getMaxAge());
     }
 
-    /**
-     * @return \Generator
-     */
     public function invalidVersions(): \Generator
     {
         yield [''];
@@ -126,9 +107,6 @@ class AbstractControllerTest extends TestCase
         yield ['v1.2.3.4'];
     }
 
-    /**
-     * @return array
-     */
     public function validVersions(): \Generator
     {
         yield ['v1', 'v1'];

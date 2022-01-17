@@ -9,11 +9,7 @@
     ],
     "authors": [
         {
-            "name": "Ariel Ferrandini",
-            "email": "aferrandini@vocento.com"
-        },
-        {
-            "name": "Software Architecture Department",
+            "name": "Arquitectura Vocento",
             "email": "arquitectura@vocento.com"
         }
     ],
@@ -30,21 +26,21 @@
     "require": {
         "php": "^7.1",
         "ext-json": "*",
-        "beberlei/assert": "^3.0",
-        "composer/semver": "^1.4",
-        "monolog/monolog": "^1.2 || ^2.2",
-        "symfony/framework-bundle": "^4.2 || ^4.3 || ^4.4",
-        "vocento/request-id": "^1.1"
+        "beberlei/assert": "^2.6 || ^3.0",
+        "composer/semver": "~1.4",
+        "monolog/monolog": "~1.22",
+        "symfony/framework-bundle": "^3.0 || ^4.0 || ^5.0",
+        "vocento/request-id": "^1.0"
     },
     "require-dev": {
-        "matthiasnoback/symfony-dependency-injection-test": "^3.1",
-        "phpunit/phpunit": "^7.5",
-        "jms/serializer": "~1.1"
+        "jms/serializer": "~1.1",
+        "matthiasnoback/symfony-dependency-injection-test": "^2.0 || ^3.0 || ^4.0",
+        "phpunit/phpunit": "^6.0 || ^7.0 || ^8.0"
     },
     "config": {
         "bin-dir": "bin"
     },
     "suggest": {
-        "jms/serializer": "Allows the usage of SerializerAwareControllerTrait to include some extra methods to the controllers."
+        "jms/serializer": "Allows the usage of SerializerAwareControllerTrait for extra methods to the controllers."
     }
 }

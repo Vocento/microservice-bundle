@@ -2,7 +2,7 @@ language: php
 
 php:
   - 7.1
-  - 7.2
+  - 7.4
 
 cache:
   directories:
@@ -17,4 +17,4 @@ script:
 
 notifications:
   email:
-    - aferrandini@vocento.com
+    - arquitectura@vocento.com

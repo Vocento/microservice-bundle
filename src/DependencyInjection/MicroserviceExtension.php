@@ -14,87 +14,52 @@ namespace Vocento\MicroserviceBundle\DependencyInjection;
 use Composer\Semver\Comparator;
 use Composer\Semver\Semver;
 use Composer\Semver\VersionParser;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * @author Ariel Ferrandini <aferrandini@vocento.com>
+ * Class MicroserviceExtension.
+ *
+ * @author Arquitectura <arquitectura@vocento.com>
  */
-class MicroserviceExtension implements ExtensionInterface
+class MicroserviceExtension extends Extension
 {
-    /** @var array */
-    private $configFiles;
-
     /**
-     * MicroserviceExtension constructor.
-     *
-     * @param array $configFiles
-     */
-    public function __construct(array $configFiles = [])
-    {
-        $this->configFiles = $configFiles;
-    }
-
-    /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader(
-            $container,
-            new FileLocator(
-                __DIR__
-                .\DIRECTORY_SEPARATOR
-                .'..'
-                .\DIRECTORY_SEPARATOR
-                .'Resources'
-                .\DIRECTORY_SEPARATOR
-                .'config'
-                .\DIRECTORY_SEPARATOR
-                .'services'
-            )
-        );
+        $paths = \implode(\DIRECTORY_SEPARATOR, [
+            __DIR__,
+            '..',
+            'Resources',
+            'config',
+            'services',
+        ]);
+        $locator = new FileLocator($paths);
+        $loader = new YamlFileLoader($container, $locator);
+        $loader->load('controllers.yml');
+        $loader->load('listeners.yml');
 
-        foreach ($this->configFiles as $file) {
-            $loader->load($file.'.yml');
-        }
-
-        $config = $this->processConfiguration(new Configuration(), $configs);
+        $configuration = $this->getConfiguration($configs, $container);
+        $config = $this->processConfiguration($configuration, $configs);
+        $versions = $this->normalizeVersions($config['versions']['list']);
+        $currentVersion = $this->getCurrentVersion($config['versions']['current'], $versions);
 
         $container->setParameter('microservice.name', $config['name']);
-        $container->setParameter('microservice.debug', ($config['debug'] ? true : false));
-        $container->setParameter('microservice.manage_exceptions', ($config['manage_exceptions'] ? true : false));
+        $container->setParameter('microservice.debug', (bool) $config['debug']);
+        $container->setParameter('microservice.manage_exceptions', (bool) $config['manage_exceptions']);
         $container->setParameter('microservice.code_version', $config['code_version']);
-
-        $versions = $this->normalizeVersions($config['versions']['list']);
         $container->setParameter('microservice.versions.list', $versions);
-        $container->setParameter(
-            'microservice.versions.current',
-            $this->getCurrentVersion($config['versions']['current'], $versions)
-        );
+        $container->setParameter('microservice.versions.current', $currentVersion);
     }
 
     /**
-     * @param ConfigurationInterface $configuration
-     * @param array                  $config
+     * @param string[] $versions
      *
-     * @return array
-     */
-    protected function processConfiguration(ConfigurationInterface $configuration, array $config): array
-    {
-        $processor = new Processor();
-
-        return $processor->processConfiguration($configuration, $config);
-    }
-
-    /**
-     * @param array $versions
-     *
-     * @return array
+     * @return string[]
      */
     private function normalizeVersions(array $versions): array
     {
@@ -106,14 +71,14 @@ class MicroserviceExtension implements ExtensionInterface
 
         $removedVersionsKey = [];
 
-        for ($i = 0; $i < $versionsCount; ++$i) {
+        foreach ($versions as $i => $iValue) {
             for ($j = $i + 1; $j < $versionsCount; ++$j) {
                 if ($i === $j || \in_array($j, $removedVersionsKey, true)) {
                     continue;
                 }
 
                 if (Comparator::equalTo(
-                    $versionParser->normalize($versions[$i]),
+                    $versionParser->normalize($iValue),
                     $versionParser->normalize($versions[$j])
                 )) {
                     $removedVersionsKey[] = $j;
@@ -129,48 +94,22 @@ class MicroserviceExtension implements ExtensionInterface
     }
 
     /**
-     * @param string $currentVersion
-     * @param array  $versions
-     *
-     * @return string
+     * @param string[] $versions
      */
-    private function getCurrentVersion($currentVersion, array $versions): string
+    private function getCurrentVersion(string $currentVersion, array $versions): string
     {
-        if ('latest' === \strtolower($currentVersion) && \count($versions)) {
-            $versions = Semver::rsort($versions);
-            foreach ($versions as $version) {
-                if ('stable' === VersionParser::parseStability($version)) {
-                    return $version;
-                }
-            }
-
-            return \array_shift($versions);
+        if ('latest' !== \strtolower($currentVersion) || 0 === \count($versions)) {
+            return $currentVersion;
         }
 
-        return $currentVersion;
-    }
+        $versions = Semver::rsort($versions);
 
-    /**
-     * @return string
-     */
-    public function getNamespace(): string
-    {
-        return 'http://example.org/schema/dic/'.$this->getAlias();
-    }
+        foreach ($versions as $version) {
+            if ('stable' === VersionParser::parseStability($version)) {
+                return $version;
+            }
+        }
 
-    /**
-     * @inheritDoc
-     */
-    public function getAlias(): string
-    {
-        return 'microservice';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getXsdValidationBasePath(): string
-    {
-        return 'http://example.org/schema/dic/'.$this->getAlias();
+        return \array_shift($versions);
     }
 }

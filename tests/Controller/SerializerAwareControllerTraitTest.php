@@ -17,14 +17,15 @@ use PHPUnit\Framework\TestCase;
 use Vocento\MicroserviceBundle\Controller\SerializerAwareControllerTrait;
 
 /**
- * @author Ariel Ferrandini <aferrandini@vocento.com>
+ * Class SerializerAwareControllerTraitTest.
+ *
+ * @author Arquitectura <arquitectura@vocento.com>
+ *
+ * @covers \Vocento\MicroserviceBundle\Controller\SerializerAwareControllerTrait
  */
 class SerializerAwareControllerTraitTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function whenCallingSerializeWithoutSerializerShouldReturnNull(): void
+    public function testWhenCallingSerializeWithoutSerializerShouldReturnNull(): void
     {
         /** @var SerializerAwareControllerTrait $trait */
         $trait = $this->createTraitStub();
@@ -43,15 +44,15 @@ class SerializerAwareControllerTraitTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider serializationCases
      *
-     * @param mixed  $object
-     * @param string $version
-     * @param array  $groups
+     * @param object|array|scalar $object
      */
-    public function whenCallingSerializeWithSerializerShouldReturnJson($object, string $version, array $groups): void
-    {
+    public function testWhenCallingSerializeWithSerializerShouldReturnJson(
+        $object,
+        string $version,
+        array $groups
+    ): void {
         $serializer = $this->createSerializerMock();
         $serializer->expects($this->once())->method('serialize');
 
@@ -67,16 +68,12 @@ class SerializerAwareControllerTraitTest extends TestCase
     private function createSerializerMock(): MockObject
     {
         $serializerMock = $this->createMock(SerializerInterface::class);
-        $serializerMock->expects(static::any())
-            ->method('serialize')
+        $serializerMock->method('serialize')
             ->willReturn('');
 
         return $serializerMock;
     }
 
-    /**
-     * @return array
-     */
     public function serializationCases(): array
     {
         return [

@@ -15,45 +15,31 @@ use PHPUnit\Framework\TestCase;
 use Vocento\MicroserviceBundle\Controller\ServiceController;
 
 /**
- * @author Ariel Ferrandini <aferrandini@vocento.com>
+ * Class ServiceControllerTest.
+ *
+ * @author Arquitectura <arquitectura@vocento.com>
+ *
+ * @covers \Vocento\MicroserviceBundle\Controller\ServiceController
  */
 class ServiceControllerTest extends TestCase
 {
     /**
-     * @test
-     * @expectedException \InvalidArgumentException
      * @dataProvider invalidConstructorArguments
-     *
-     * @param string $serviceName
-     * @param string $codeVersion
-     * @param array  $versions
-     * @param string $currentVersion
-     *
-     * @return ServiceController
-     *
-     * @throws \Assert\AssertionFailedException
      */
-    public function invalidServiceControllerArgumentsShouldThrowException(
-        $serviceName,
-        $codeVersion,
+    public function testInvalidServiceControllerArgumentsShouldThrowException(
+        string $serviceName,
+        string $codeVersion,
         array $versions,
-        $currentVersion
-    ): ServiceController {
+        string $currentVersion
+    ): void {
+        $this->expectException(\InvalidArgumentException::class);
         new ServiceController($serviceName, $codeVersion, $versions, $currentVersion);
     }
 
     /**
-     * @test
      * @dataProvider validConstructorArguments
-     *
-     * @param string $serviceName
-     * @param string $codeVersion
-     * @param array  $versions
-     * @param string $currentVersion
-     *
-     * @throws \Assert\AssertionFailedException
      */
-    public function serviceActionShouldReturnJsonResponse(
+    public function testServiceActionShouldReturnJsonResponse(
         string $serviceName,
         string $codeVersion,
         array $versions,
@@ -62,7 +48,7 @@ class ServiceControllerTest extends TestCase
         $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->serviceAction();
 
-        $this->assertEquals(
+        static::assertEquals(
             \json_encode(
                 [
                     'service' => [
@@ -77,16 +63,6 @@ class ServiceControllerTest extends TestCase
         );
     }
 
-    /**
-     * @param string $serviceName
-     * @param string $codeVersion
-     * @param array  $versions
-     * @param string $currentVersion
-     *
-     * @return ServiceController
-     *
-     * @throws \Assert\AssertionFailedException
-     */
     private function createController(
         string $serviceName,
         string $codeVersion,
@@ -97,17 +73,9 @@ class ServiceControllerTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider validConstructorArguments
-     *
-     * @param string $serviceName
-     * @param string $codeVersion
-     * @param array  $versions
-     * @param string $currentVersion
-     *
-     * @throws \Assert\AssertionFailedException
      */
-    public function nameActionShouldReturnJsonResponse(
+    public function testNameActionShouldReturnJsonResponse(
         string $serviceName,
         string $codeVersion,
         array $versions,
@@ -116,21 +84,13 @@ class ServiceControllerTest extends TestCase
         $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->nameAction();
 
-        $this->assertEquals(\json_encode(['service' => ['name' => $serviceName]]), $response->getContent());
+        static::assertEquals(\json_encode(['service' => ['name' => $serviceName]]), $response->getContent());
     }
 
     /**
-     * @test
      * @dataProvider validConstructorArguments
-     *
-     * @param string $serviceName
-     * @param string $codeVersion
-     * @param array  $versions
-     * @param string $currentVersion
-     *
-     * @throws \Assert\AssertionFailedException
      */
-    public function versionsActionShouldReturnJsonResponse(
+    public function testVersionsActionShouldReturnJsonResponse(
         string $serviceName,
         string $codeVersion,
         array $versions,
@@ -139,24 +99,16 @@ class ServiceControllerTest extends TestCase
         $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->versionsAction();
 
-        $this->assertEquals(
+        static::assertEquals(
             \json_encode(['service' => ['current' => $currentVersion, 'versions' => $versions]]),
             $response->getContent()
         );
     }
 
     /**
-     * @test
      * @dataProvider validConstructorArguments
-     *
-     * @param string $serviceName
-     * @param string $codeVersion
-     * @param array  $versions
-     * @param string $currentVersion
-     *
-     * @throws \Assert\AssertionFailedException
      */
-    public function currentVersionActionShouldReturnJsonResponse(
+    public function testCurrentVersionActionShouldReturnJsonResponse(
         string $serviceName,
         string $codeVersion,
         array $versions,
@@ -165,12 +117,9 @@ class ServiceControllerTest extends TestCase
         $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->currentVersionAction();
 
-        $this->assertEquals(\json_encode(['service' => ['version' => $currentVersion]]), $response->getContent());
+        static::assertEquals(\json_encode(['service' => ['version' => $currentVersion]]), $response->getContent());
     }
 
-    /**
-     * @return \Generator
-     */
     public function invalidConstructorArguments(): \Generator
     {
         yield ['', '', [], ''];
@@ -183,9 +132,6 @@ class ServiceControllerTest extends TestCase
         yield ['name', '', ['v1'], 'v'];
     }
 
-    /**
-     * @return \Generator
-     */
     public function validConstructorArguments(): \Generator
     {
         yield ['name', 'unknown', ['v1', 'v2', 'v3'], 'v1'];

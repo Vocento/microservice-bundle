@@ -16,45 +16,35 @@ use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Vocento\MicroserviceBundle\Listeners\SetResponseHeadersListener;
 
 /**
- * @author Ariel Ferrandini <aferrandini@vocento.com>
+ * Class SetResponseHeadersListenerTest.
+ *
+ * @author Arquitectura <arquitectura@vocento.com>
+ *
+ * @covers \Vocento\MicroserviceBundle\Listeners\SetResponseHeadersListener
  */
 class SetResponseHeadersListenerTest extends TestCase
 {
-    /** @var string */
-    private $serviceName;
-
     /** @var SetResponseHeadersListener */
     private $listener;
 
-    /**
-     * @test
-     */
-    public function shouldAddRequestIdIfIsMaster(): void
+    public function testShouldAddRequestIdIfIsMaster(): void
     {
         $event = $this->createFilteredResponseEvent();
 
         $this->listener->onKernelResponse($event);
 
-        $this->assertArrayHasKey('request-id', $event->getResponse()->headers->all());
-        $this->assertNotEmpty($event->getResponse()->headers->get('request-id'));
+        static::assertArrayHasKey('request-id', $event->getResponse()->headers->all());
+        static::assertNotEmpty($event->getResponse()->headers->get('request-id'));
     }
 
-    /**
-     * @param bool $master
-     * @param bool $addRequestId
-     *
-     * @return FilterResponseEvent
-     */
-    private function createFilteredResponseEvent(bool $master = true, bool $addRequestId = true): FilterResponseEvent
+    private function createFilteredResponseEvent(bool $isMasterRequest = true, bool $addRequestId = true)
     {
         /** @var MockObject|HttpKernelInterface $kernel */
         $kernel = $this->createMock(HttpKernelInterface::class);
-
         $request = new Request();
 
         if ($addRequestId) {
@@ -62,52 +52,44 @@ class SetResponseHeadersListenerTest extends TestCase
         }
 
         $response = new Response();
+        $requestType = $isMasterRequest ? HttpKernelInterface::MASTER_REQUEST : HttpKernelInterface::SUB_REQUEST;
+        $eventClass = \class_exists('\\Symfony\\Component\\HttpKernel\\Event\\ResponseEvent')
+            ? '\\Symfony\\Component\\HttpKernel\\Event\\ResponseEvent'
+            : '\\Symfony\\Component\\HttpKernel\\Event\\FilterResponseEvent';
 
-        return new FilterResponseEvent(
-            $kernel,
-            $request,
-            ($master ? HttpKernelInterface::MASTER_REQUEST : HttpKernelInterface::SUB_REQUEST),
-            $response
-        );
+        return new $eventClass($kernel, $request, $requestType, $response);
     }
 
-    /**
-     * @test
-     */
-    public function shouldNotAddRequestIdHeaderIfIsNotMaster(): void
+    public function testShouldNotAddRequestIdHeaderIfIsNotMaster(): void
     {
         $event = $this->createFilteredResponseEvent(false);
 
         $this->listener->onKernelResponse($event);
 
-        $this->assertArrayNotHasKey('request-id', $event->getResponse()->headers->all());
+        static::assertArrayNotHasKey('request-id', $event->getResponse()->headers->all());
     }
 
-    /**
-     * @test
-     */
-    public function shouldCreateRequestIdWhenDoesNotExistsInRequest(): void
+    public function testShouldCreateRequestIdWhenDoesNotExistsInRequest(): void
     {
         $event = $this->createFilteredResponseEvent(true, false);
 
         $this->listener->onKernelResponse($event);
 
-        $this->assertArrayHasKey('request-id', $event->getResponse()->headers->all());
+        static::assertArrayHasKey('request-id', $event->getResponse()->headers->all());
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->serviceName = 'test-service-name';
         $this->listener = new SetResponseHeadersListener();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->listener = null;
     }
