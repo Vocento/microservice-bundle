@@ -28,7 +28,7 @@
         "ext-json": "*",
         "beberlei/assert": "^2.6 || ^3.0",
         "composer/semver": "~1.4",
-        "monolog/monolog": "~1.22",
+        "monolog/monolog": "^1.22 || ^2.0",
         "symfony/framework-bundle": "^3.0 || ^4.0 || ^5.0",
         "vocento/request-id": "^1.0"
     },
