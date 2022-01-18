@@ -15,17 +15,18 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Vocento\MicroserviceBundle\DependencyInjection\MicroserviceExtension;
 
 /**
- * @author Ariel Ferrandini <aferrandini@vocento.com>
+ * Class MicroserviceExtensionTest.
+ *
+ * @author Arquitectura <arquitectura@vocento.com>
+ *
+ * @covers \Vocento\MicroserviceBundle\DependencyInjection\MicroserviceExtension
  */
 class MicroserviceExtensionTest extends AbstractExtensionTestCase
 {
     /**
      * @dataProvider getConfigurations
-     *
-     * @param $configuration
-     * @param $expectation
      */
-    public function testAfterLoadingTheCorrectParametersHasBeenSet($configuration, $expectation): void
+    public function testAfterLoadingTheCorrectParametersHasBeenSet(array $configuration, array $expectation): void
     {
         $this->load($configuration);
 
@@ -43,9 +44,6 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService('vocento.microservice.set_response_request_id_header.listener');
     }
 
-    /**
-     * @return array
-     */
     public function getConfigurations(): array
     {
         $testCases = [];
@@ -273,12 +271,12 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function getContainerExtensions(): array
     {
         return [
-            new MicroserviceExtension(['controllers', 'listeners']),
+            new MicroserviceExtension(),
         ];
     }
 }

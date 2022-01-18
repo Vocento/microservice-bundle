@@ -16,12 +16,14 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * @author Ariel Ferrandini <aferrandini@vocento.com>
+ * Class Configuration.
+ *
+ * @author Arquitectura <arquitectura@vocento.com>
  */
 class Configuration implements ConfigurationInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
@@ -55,9 +57,6 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * @param ArrayNodeDefinition $rootNode
-     */
     private function addVersionSection(ArrayNodeDefinition $rootNode): void
     {
         $rootNode

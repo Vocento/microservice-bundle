@@ -13,11 +13,12 @@ namespace Vocento\MicroserviceBundle\Listeners;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
- * @author Ariel Ferrandini <aferrandini@vocento.com>
+ * Class ExceptionListener.
+ *
+ * @author Arquitectura <arquitectura@vocento.com>
  */
 final class ExceptionListener
 {
@@ -27,17 +28,10 @@ final class ExceptionListener
     /** @var bool */
     private $manageExceptions;
 
-    /** @var LoggerInterface */
+    /** @var LoggerInterface|null */
     private $logger;
 
-    /**
-     * ExceptionListener constructor.
-     *
-     * @param bool            $debug
-     * @param bool            $manageExceptions
-     * @param LoggerInterface $logger
-     */
-    public function __construct($debug = false, $manageExceptions = true, LoggerInterface $logger = null)
+    public function __construct(bool $debug = false, bool $manageExceptions = true, LoggerInterface $logger = null)
     {
         $this->debug = $debug;
         $this->manageExceptions = $manageExceptions;
@@ -45,39 +39,49 @@ final class ExceptionListener
     }
 
     /**
-     * @param GetResponseForExceptionEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent|\Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
      *
      * @throws \InvalidArgumentException
      */
-    public function onKernelException(GetResponseForExceptionEvent $event): void
+    public function onKernelException($event): void
     {
-        if (false === $this->debug && true === $this->manageExceptions) {
-            $this->logException($event->getException());
-
-            $response = new Response();
-
-            if ($event->getException() instanceof HttpExceptionInterface) {
-                /** @var HttpExceptionInterface $exception */
-                $exception = $event->getException();
-                $response->headers->add($exception->getHeaders());
-
-                $response->setStatusCode($exception->getStatusCode());
-            } else {
-                $response->setStatusCode(500);
-            }
-
-            $event->setResponse($response);
-            $event->stopPropagation();
+        if ($this->debug || !$this->manageExceptions) {
+            return;
         }
+
+        if (\method_exists($event, 'getThrowable')) {
+            $exception = $event->getThrowable();
+        } else {
+            $exception = $event->getException();
+        }
+
+        $this->logException($exception);
+
+        $response = new Response('', 500);
+
+        if ($exception instanceof HttpExceptionInterface) {
+            $headers = $exception->getHeaders();
+            $statusCode = $exception->getStatusCode();
+
+            $response->headers->add($headers);
+            $response->setStatusCode($statusCode);
+        }
+
+        $event->setResponse($response);
+        $event->stopPropagation();
     }
 
     /**
      * Logs an exception.
      *
-     * @param \Exception $exception The \Exception instance
+     * @param \Throwable $exception The \Exception instance
      */
-    private function logException(\Exception $exception): void
+    private function logException(\Throwable $exception): void
     {
+        if (null === $this->logger) {
+            return;
+        }
+
         $message = \sprintf(
             'Uncaught PHP Exception %s: "%s" at %s line %s',
             \get_class($exception),
@@ -86,12 +90,20 @@ final class ExceptionListener
             $exception->getLine()
         );
 
-        if (null !== $this->logger) {
-            if (!$exception instanceof HttpExceptionInterface || $exception->getStatusCode() >= 500) {
-                $this->logger->critical($message, ['exception' => $exception]);
-            } else {
-                $this->logger->error($message, ['exception' => $exception]);
-            }
+        $context = [
+            'exception' => $exception,
+        ];
+
+        if (!($exception instanceof HttpExceptionInterface)) {
+            $this->logger->error($message, $context);
+
+            return;
         }
+
+        if ($exception->getStatusCode() < Response::HTTP_INTERNAL_SERVER_ERROR) {
+            $this->logger->error($message, $context);
+        }
+
+        $this->logger->critical($message, $context);
     }
 }

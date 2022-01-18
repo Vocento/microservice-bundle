@@ -15,19 +15,17 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 
 /**
- * @author Ariel Ferrandini <aferrandini@vocento.com>
+ * Trait SerializerAwareControllerTrait.
+ *
+ * @author Arquitectura <arquitectura@vocento.com>
  */
 trait SerializerAwareControllerTrait
 {
-    /**
-     * @var SerializerInterface
-     */
+    /** @var SerializerInterface */
     private $serializer;
 
     /**
-     * @param mixed  $object
-     * @param string $version
-     * @param array  $groups
+     * @param object|array|scalar $object
      *
      * @return string
      */
@@ -40,28 +38,16 @@ trait SerializerAwareControllerTrait
         return null;
     }
 
-    /**
-     * @return SerializerInterface
-     */
     public function getSerializer(): SerializerInterface
     {
         return $this->serializer;
     }
 
-    /**
-     * @param SerializerInterface $serializer
-     */
     public function setSerializer(SerializerInterface $serializer): void
     {
         $this->serializer = $serializer;
     }
 
-    /**
-     * @param string $version
-     * @param array  $groups
-     *
-     * @return SerializationContext
-     */
     protected function createContext(string $version, array $groups): SerializationContext
     {
         foreach ($groups as $index => $group) {

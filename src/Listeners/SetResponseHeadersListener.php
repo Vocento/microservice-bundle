@@ -11,29 +11,40 @@
 
 namespace Vocento\MicroserviceBundle\Listeners;
 
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Vocento\RequestId;
 
 /**
- * @author Ariel Ferrandini <aferrandini@vocento.com>
+ * Class SetResponseHeadersListener.
+ *
+ * @author Arquitectura <arquitectura@vocento.com>
  */
 final class SetResponseHeadersListener
 {
     /**
-     * @param FilterResponseEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ResponseEvent|\Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event): void
+    public function onKernelResponse($event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (\method_exists($event, 'isMainRequest')) {
+            $isMainRequest = $event->isMainRequest();
+        } else {
+            $isMainRequest = $event->isMasterRequest();
+        }
+
+        if (!$isMainRequest) {
             return;
         }
 
-        // Set request-id header
-        if (null === $event->getResponse()->headers->get('request-id')) {
-            if (null === $event->getRequest()->headers->get('request-id')) {
-                $event->getRequest()->headers->set('request-id', RequestId::create());
-            }
-            $event->getResponse()->headers->set('request-id', $event->getRequest()->headers->get('request-id'));
+        $response = $event->getResponse();
+
+        if (null !== $response->headers->get('request-id')) {
+            return;
         }
+
+        $request = $event->getRequest();
+        $requestId = $request->headers->get('request-id', RequestId::create()->getId());
+
+        $request->headers->set('request-id', $requestId);
+        $response->headers->set('request-id', $requestId);
     }
 }
