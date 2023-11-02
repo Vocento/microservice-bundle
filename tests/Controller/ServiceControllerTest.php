@@ -9,6 +9,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\Tests\Controller;
 
 use PHPUnit\Framework\TestCase;
@@ -20,11 +22,15 @@ use Vocento\MicroserviceBundle\Controller\ServiceController;
  * @author Arquitectura <arquitectura@vocento.com>
  *
  * @covers \Vocento\MicroserviceBundle\Controller\ServiceController
+ *
+ * @internal
  */
-class ServiceControllerTest extends TestCase
+final class ServiceControllerTest extends TestCase
 {
     /**
-     * @dataProvider invalidConstructorArguments
+     * @dataProvider provideInvalidServiceControllerArgumentsShouldThrowExceptionCases
+     *
+     * @param list<string> $versions
      */
     public function testInvalidServiceControllerArgumentsShouldThrowException(
         string $serviceName,
@@ -38,6 +44,8 @@ class ServiceControllerTest extends TestCase
 
     /**
      * @dataProvider validConstructorArguments
+     *
+     * @param list<string> $versions
      */
     public function testServiceActionShouldReturnJsonResponse(
         string $serviceName,
@@ -48,7 +56,7 @@ class ServiceControllerTest extends TestCase
         $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->serviceAction();
 
-        static::assertEquals(
+        self::assertSame(
             \json_encode(
                 [
                     'service' => [
@@ -63,6 +71,9 @@ class ServiceControllerTest extends TestCase
         );
     }
 
+    /**
+     * @param list<string> $versions
+     */
     private function createController(
         string $serviceName,
         string $codeVersion,
@@ -74,6 +85,8 @@ class ServiceControllerTest extends TestCase
 
     /**
      * @dataProvider validConstructorArguments
+     *
+     * @param list<string> $versions
      */
     public function testNameActionShouldReturnJsonResponse(
         string $serviceName,
@@ -84,11 +97,13 @@ class ServiceControllerTest extends TestCase
         $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->nameAction();
 
-        static::assertEquals(\json_encode(['service' => ['name' => $serviceName]]), $response->getContent());
+        self::assertSame(\json_encode(['service' => ['name' => $serviceName]]), $response->getContent());
     }
 
     /**
      * @dataProvider validConstructorArguments
+     *
+     * @param list<string> $versions
      */
     public function testVersionsActionShouldReturnJsonResponse(
         string $serviceName,
@@ -99,7 +114,7 @@ class ServiceControllerTest extends TestCase
         $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->versionsAction();
 
-        static::assertEquals(
+        self::assertSame(
             \json_encode(['service' => ['current' => $currentVersion, 'versions' => $versions]]),
             $response->getContent()
         );
@@ -107,6 +122,8 @@ class ServiceControllerTest extends TestCase
 
     /**
      * @dataProvider validConstructorArguments
+     *
+     * @param list<string> $versions
      */
     public function testCurrentVersionActionShouldReturnJsonResponse(
         string $serviceName,
@@ -117,10 +134,13 @@ class ServiceControllerTest extends TestCase
         $controller = $this->createController($serviceName, $codeVersion, $versions, $currentVersion);
         $response = $controller->currentVersionAction();
 
-        static::assertEquals(\json_encode(['service' => ['version' => $currentVersion]]), $response->getContent());
+        self::assertSame(\json_encode(['service' => ['version' => $currentVersion]]), $response->getContent());
     }
 
-    public function invalidConstructorArguments(): \Generator
+    /**
+     * @return \Generator<array{string, string, list<string>, string}>
+     */
+    public function provideInvalidServiceControllerArgumentsShouldThrowExceptionCases(): iterable
     {
         yield ['', '', [], ''];
         yield ['', '', [], 'v1'];
@@ -132,7 +152,10 @@ class ServiceControllerTest extends TestCase
         yield ['name', '', ['v1'], 'v'];
     }
 
-    public function validConstructorArguments(): \Generator
+    /**
+     * @return \Generator<array{string, string, list<string>, string}>
+     */
+    public function validConstructorArguments(): iterable
     {
         yield ['name', 'unknown', ['v1', 'v2', 'v3'], 'v1'];
         yield ['name', '71121dd', ['v1', 'v2', 'v3'], 'v2'];

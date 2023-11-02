@@ -9,29 +9,33 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\Controller;
 
 use Assert\Assertion;
-use Assert\AssertionFailedException;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as FrameworkAbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class AbstractController.
  *
  * @author Arquitectura <arquitectura@vocento.com>
+ *
+ * @deprecated since version 5.2, use Vocento\MicroserviceBundle\Controller\AbstractMicroserviceController instead.
  */
-abstract class AbstractController
+abstract class AbstractController extends FrameworkAbstractController
 {
     /** @var string */
-    private $version;
+    protected $version;
 
     /** @var int */
-    private $sharedMaxAge = 0;
+    protected $sharedMaxAge = 0;
 
     /**
      * AbstractController constructor.
      *
-     * @throws AssertionFailedException
+     * @throws \InvalidArgumentException
      */
     public function __construct(int $sharedMaxAge, string $version)
     {
@@ -39,17 +43,22 @@ abstract class AbstractController
         $this->setVersion($version);
     }
 
-    private function setSharedMaxAge(int $sharedMaxAge): void
+    protected function setSharedMaxAge(int $sharedMaxAge): void
     {
         if ($sharedMaxAge > 0) {
             $this->sharedMaxAge = $sharedMaxAge;
         }
     }
 
+    protected function getSharedMaxAge(): int
+    {
+        return $this->sharedMaxAge;
+    }
+
     /**
-     * @throws AssertionFailedException
+     * @throws \InvalidArgumentException
      */
-    private function setVersion(string $version): void
+    protected function setVersion(string $version): void
     {
         Assertion::regex($version, '/^v(\d+\.)?(\d+\.)?(\d+)$/');
 
@@ -73,24 +82,12 @@ abstract class AbstractController
     }
 
     /**
-     * @param mixed                $data
+     * @param mixed                $data    The response data
      * @param array<string, mixed> $headers
      */
-    public function getJsonResponse(
-        $data,
-        int $status = 200,
-        array $headers = [],
-        int $sharedMaxAge = 0
-    ): JsonResponse {
-        $response = new JsonResponse($data, $status, $headers);
-        $response->setEncodingOptions($response->getEncodingOptions() | \JSON_PRESERVE_ZERO_FRACTION);
-        $response->setSharedMaxAge($sharedMaxAge);
-
-        return $response;
-    }
-
-    protected function getSharedMaxAge(): int
+    public function getJsonResponse($data, int $status = 200, array $headers = []): JsonResponse
     {
-        return $this->sharedMaxAge;
+        return $this->json($data, $status, $headers)
+            ->setSharedMaxAge($this->sharedMaxAge);
     }
 }

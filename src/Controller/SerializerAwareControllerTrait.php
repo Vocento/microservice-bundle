@@ -9,6 +9,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\Controller;
 
 use JMS\Serializer\SerializationContext;
@@ -26,19 +28,20 @@ trait SerializerAwareControllerTrait
 
     /**
      * @param object|array|scalar $object
-     *
-     * @return string
+     * @param array<string>       $groups
      */
-    public function serializeObject($object, string $version, array $groups = []): ?string
+    public function serialize($object, string $version, array $groups = []): ?string
     {
-        if ($this->serializer) {
-            return $this->getSerializer()->serialize($object, 'json', $this->createContext($version, $groups));
+        if (!$this->serializer) {
+            return null;
         }
 
-        return null;
+        $context = $this->createContext($version, $groups);
+
+        return $this->serializer->serialize($object, 'json', $context);
     }
 
-    public function getSerializer(): SerializerInterface
+    public function getSerializer(): ?SerializerInterface
     {
         return $this->serializer;
     }
@@ -48,6 +51,9 @@ trait SerializerAwareControllerTrait
         $this->serializer = $serializer;
     }
 
+    /**
+     * @param array<string> $groups
+     */
     protected function createContext(string $version, array $groups): SerializationContext
     {
         foreach ($groups as $index => $group) {

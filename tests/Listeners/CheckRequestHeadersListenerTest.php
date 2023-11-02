@@ -9,11 +9,14 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\Tests\Listeners;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Vocento\MicroserviceBundle\Listeners\CheckRequestHeadersListener;
 
@@ -23,8 +26,10 @@ use Vocento\MicroserviceBundle\Listeners\CheckRequestHeadersListener;
  * @author Arquitectura <arquitectura@vocento.com>
  *
  * @covers \Vocento\MicroserviceBundle\Listeners\CheckRequestHeadersListener
+ *
+ * @internal
  */
-class CheckRequestHeadersListenerTest extends TestCase
+final class CheckRequestHeadersListenerTest extends TestCase
 {
     /** @var string */
     private $serviceName;
@@ -38,21 +43,18 @@ class CheckRequestHeadersListenerTest extends TestCase
 
         $this->listener->onKernelRequest($event);
 
-        static::assertArrayHasKey('service-name', $event->getRequest()->headers->all());
-        static::assertEquals($this->serviceName, $event->getRequest()->headers->get('service-name'));
+        self::assertArrayHasKey('service-name', $event->getRequest()->headers->all());
+        self::assertSame($this->serviceName, $event->getRequest()->headers->get('service-name'));
     }
 
-    private function createResponseEvent(bool $isMasterRequest = true)
+    private function createResponseEvent(bool $isMasterRequest = true): ExceptionEvent
     {
         /** @var MockObject|HttpKernelInterface $kernel */
         $kernel = $this->createMock(HttpKernelInterface::class);
         $request = new Request();
         $requestType = $isMasterRequest ? HttpKernelInterface::MASTER_REQUEST : HttpKernelInterface::SUB_REQUEST;
-        $eventClass = \class_exists('\\Symfony\\Component\\HttpKernel\\Event\\RequestEvent')
-            ? '\\Symfony\\Component\\HttpKernel\\Event\\RequestEvent'
-            : '\\Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent';
 
-        return new $eventClass($kernel, $request, $requestType, new \RuntimeException());
+        return new ExceptionEvent($kernel, $request, $requestType, new \RuntimeException());
     }
 
     public function testShouldNotAddServiceNameHeaderIfIsNotMaster(): void
@@ -61,7 +63,7 @@ class CheckRequestHeadersListenerTest extends TestCase
 
         $this->listener->onKernelRequest($event);
 
-        static::assertArrayNotHasKey('service-name', $event->getRequest()->headers->all());
+        self::assertArrayNotHasKey('service-name', $event->getRequest()->headers->all());
     }
 
     public function testShouldAddRequestIdHeaderIfNotPresentAndIsMaster(): void
@@ -70,8 +72,8 @@ class CheckRequestHeadersListenerTest extends TestCase
 
         $this->listener->onKernelRequest($event);
 
-        static::assertArrayHasKey('request-id', $event->getRequest()->headers->all());
-        static::assertNotEmpty($event->getRequest()->headers->get('request-id'));
+        self::assertArrayHasKey('request-id', $event->getRequest()->headers->all());
+        self::assertNotEmpty($event->getRequest()->headers->get('request-id'));
     }
 
     public function testShouldNotAddRequestIdHeaderIfIsNotMaster(): void
@@ -80,23 +82,12 @@ class CheckRequestHeadersListenerTest extends TestCase
 
         $this->listener->onKernelRequest($event);
 
-        static::assertArrayNotHasKey('request-id', $event->getRequest()->headers->all());
+        self::assertArrayNotHasKey('request-id', $event->getRequest()->headers->all());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         $this->serviceName = 'test-service-name';
         $this->listener = new CheckRequestHeadersListener($this->serviceName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        $this->listener = null;
     }
 }

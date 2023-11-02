@@ -9,6 +9,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\Tests\Listeners;
 
 use PHPUnit\Framework\MockObject\MockObject;
@@ -16,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Vocento\MicroserviceBundle\Listeners\SetResponseHeadersListener;
 
@@ -25,8 +28,10 @@ use Vocento\MicroserviceBundle\Listeners\SetResponseHeadersListener;
  * @author Arquitectura <arquitectura@vocento.com>
  *
  * @covers \Vocento\MicroserviceBundle\Listeners\SetResponseHeadersListener
+ *
+ * @internal
  */
-class SetResponseHeadersListenerTest extends TestCase
+final class SetResponseHeadersListenerTest extends TestCase
 {
     /** @var SetResponseHeadersListener */
     private $listener;
@@ -37,11 +42,11 @@ class SetResponseHeadersListenerTest extends TestCase
 
         $this->listener->onKernelResponse($event);
 
-        static::assertArrayHasKey('request-id', $event->getResponse()->headers->all());
-        static::assertNotEmpty($event->getResponse()->headers->get('request-id'));
+        self::assertArrayHasKey('request-id', $event->getResponse()->headers->all());
+        self::assertNotEmpty($event->getResponse()->headers->get('request-id'));
     }
 
-    private function createFilteredResponseEvent(bool $isMasterRequest = true, bool $addRequestId = true)
+    private function createFilteredResponseEvent(bool $isMasterRequest = true, bool $addRequestId = true): ResponseEvent
     {
         /** @var MockObject|HttpKernelInterface $kernel */
         $kernel = $this->createMock(HttpKernelInterface::class);
@@ -53,11 +58,8 @@ class SetResponseHeadersListenerTest extends TestCase
 
         $response = new Response();
         $requestType = $isMasterRequest ? HttpKernelInterface::MASTER_REQUEST : HttpKernelInterface::SUB_REQUEST;
-        $eventClass = \class_exists('\\Symfony\\Component\\HttpKernel\\Event\\ResponseEvent')
-            ? '\\Symfony\\Component\\HttpKernel\\Event\\ResponseEvent'
-            : '\\Symfony\\Component\\HttpKernel\\Event\\FilterResponseEvent';
 
-        return new $eventClass($kernel, $request, $requestType, $response);
+        return new ResponseEvent($kernel, $request, $requestType, $response);
     }
 
     public function testShouldNotAddRequestIdHeaderIfIsNotMaster(): void
@@ -66,7 +68,7 @@ class SetResponseHeadersListenerTest extends TestCase
 
         $this->listener->onKernelResponse($event);
 
-        static::assertArrayNotHasKey('request-id', $event->getResponse()->headers->all());
+        self::assertArrayNotHasKey('request-id', $event->getResponse()->headers->all());
     }
 
     public function testShouldCreateRequestIdWhenDoesNotExistsInRequest(): void
@@ -75,22 +77,11 @@ class SetResponseHeadersListenerTest extends TestCase
 
         $this->listener->onKernelResponse($event);
 
-        static::assertArrayHasKey('request-id', $event->getResponse()->headers->all());
+        self::assertArrayHasKey('request-id', $event->getResponse()->headers->all());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         $this->listener = new SetResponseHeadersListener();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        $this->listener = null;
     }
 }

@@ -9,12 +9,15 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\Tests\Controller;
 
 use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Vocento\MicroserviceBundle\Controller\SerializerAwareControllerTrait;
+use Vocento\MicroserviceBundle\Controller\SerializerAwareInterface;
 
 /**
  * Class SerializerAwareControllerTraitTest.
@@ -22,21 +25,22 @@ use Vocento\MicroserviceBundle\Controller\SerializerAwareControllerTrait;
  * @author Arquitectura <arquitectura@vocento.com>
  *
  * @covers \Vocento\MicroserviceBundle\Controller\SerializerAwareControllerTrait
+ *
+ * @internal
  */
-class SerializerAwareControllerTraitTest extends TestCase
+final class SerializerAwareControllerTraitTest extends TestCase
 {
     public function testWhenCallingSerializeWithoutSerializerShouldReturnNull(): void
     {
-        /** @var SerializerAwareControllerTrait $trait */
+        /** @var SerializerAwareInterface $trait */
         $trait = $this->createTraitStub();
+        $data = $trait->serialize(['test' => '1'], 'v1', ['group1', 'group2']);
 
-        static::assertNull($trait->serializeObject(['test' => '1'], 'v1', ['group1', 'group2']));
+        self::assertNull($data);
     }
 
     /**
      * Create trait stub.
-     *
-     * @return MockObject|SerializerAwareControllerTrait
      */
     private function createTraitStub(): MockObject
     {
@@ -44,9 +48,10 @@ class SerializerAwareControllerTraitTest extends TestCase
     }
 
     /**
-     * @dataProvider serializationCases
+     * @dataProvider provideWhenCallingSerializeWithSerializerShouldReturnJsonCases
      *
-     * @param object|array|scalar $object
+     * @param object|array<string, string>|scalar $object
+     * @param array<string>                       $groups
      */
     public function testWhenCallingSerializeWithSerializerShouldReturnJson(
         $object,
@@ -54,17 +59,17 @@ class SerializerAwareControllerTraitTest extends TestCase
         array $groups
     ): void {
         $serializer = $this->createSerializerMock();
-        $serializer->expects($this->once())->method('serialize');
+        $serializer->expects(self::once())
+            ->method('serialize');
 
+        /** @var SerializerAwareInterface $trait */
         $trait = $this->createTraitStub();
-        $trait->setSerializer($serializer);
 
-        $trait->serializeObject($object, $version, $groups);
+        /** @var SerializerInterface $serializer */
+        $trait->setSerializer($serializer);
+        $trait->serialize($object, $version, $groups);
     }
 
-    /**
-     * @return MockObject|SerializerInterface
-     */
     private function createSerializerMock(): MockObject
     {
         $serializerMock = $this->createMock(SerializerInterface::class);
@@ -74,10 +79,15 @@ class SerializerAwareControllerTraitTest extends TestCase
         return $serializerMock;
     }
 
-    public function serializationCases(): array
+    /**
+     * @return array<array{object|array<string, string>|scalar, string, list<string>}>
+     */
+    public function provideWhenCallingSerializeWithSerializerShouldReturnJsonCases(): iterable
     {
         return [
+            [(object) ['test' => '1'], 'v1', ['group1', 'group2']],
             [['test' => '1'], 'v1', ['group1', 'group2']],
+            ['1', 'v1', ['group1', 'group2']],
         ];
     }
 }

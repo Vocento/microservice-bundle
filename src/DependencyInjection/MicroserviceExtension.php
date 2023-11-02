@@ -9,6 +9,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\DependencyInjection;
 
 use Composer\Semver\Comparator;
@@ -27,19 +29,14 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class MicroserviceExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * @param array<array<string, mixed>> $configs
+     *
+     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $paths = \implode(\DIRECTORY_SEPARATOR, [
-            __DIR__,
-            '..',
-            'Resources',
-            'config',
-            'services',
-        ]);
-        $locator = new FileLocator($paths);
-        $loader = new YamlFileLoader($container, $locator);
+        $loader = new YamlFileLoader($container, new FileLocator(\dirname(__DIR__).'/Resources/config/services'));
+
         $loader->load('controllers.yml');
         $loader->load('listeners.yml');
 

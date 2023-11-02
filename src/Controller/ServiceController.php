@@ -9,6 +9,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\Controller;
 
 use Assert\Assertion;
@@ -36,12 +38,8 @@ final class ServiceController extends AbstractController
      *
      * @throws AssertionFailedException
      */
-    public function __construct(
-        string $serviceName,
-        string $codeVersion,
-        array $versions,
-        string $currentVersion
-    ) {
+    public function __construct(string $serviceName, string $codeVersion, array $versions, string $currentVersion)
+    {
         parent::__construct(0, $currentVersion);
 
         $this->setServiceName($serviceName);

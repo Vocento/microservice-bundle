@@ -9,6 +9,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -22,14 +24,10 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('microservice');
 
-        /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
@@ -42,11 +40,11 @@ class Configuration implements ConfigurationInterface
                     ->info('Code version')
                     ->defaultValue('unknown')
                 ->end()
-                ->booleanNode('debug')
+                    ->booleanNode('debug')
                     ->info('Enable debug mode')
                     ->defaultFalse()
                 ->end()
-                ->booleanNode('manage_exceptions')
+                    ->booleanNode('manage_exceptions')
                     ->info('Manage exceptions')
                     ->defaultTrue()
                 ->end()
@@ -71,7 +69,6 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->scalarNode('current')->defaultValue('latest')->end()
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 }
