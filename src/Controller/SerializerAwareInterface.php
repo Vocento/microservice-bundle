@@ -18,8 +18,8 @@ use JMS\Serializer\SerializerInterface;
 interface SerializerAwareInterface
 {
     /**
-     * @param object|array|scalar $object
-     * @param array<string>       $groups
+     * @param object|array<int|string, mixed>|scalar $object
+     * @param array<string>                          $groups
      */
     public function serialize($object, string $version, array $groups = []): ?string;
 

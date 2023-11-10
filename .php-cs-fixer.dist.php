@@ -3,14 +3,14 @@
 return (new PhpCsFixer\Config())
     ->setUsingCache(false)
     ->setRules([
-        '@PER' => true,
-        '@PER:risky' => true,
+        '@PER-CS2.0' => true,
+        '@PER-CS2.0:risky' => true,
         '@PHP54Migration' => true,
         '@PHP56Migration:risky' => true,
         '@PHP71Migration' => true,
-        '@PHP71Migration:risky' => true,
+//        '@PHP71Migration:risky' => true,
         '@PhpCsFixer' => true,
-        '@PhpCsFixer:risky' => true,
+//        '@PhpCsFixer:risky' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'strict_comparison' => true,

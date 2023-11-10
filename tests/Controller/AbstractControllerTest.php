@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Vocento\MicroserviceBundle\Tests\Controller;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Vocento\MicroserviceBundle\Controller\AbstractMicroserviceController;
 
 /**
@@ -75,18 +73,18 @@ final class AbstractControllerTest extends TestCase
     public function testShouldCreateJsonResponse(): void
     {
         $data = ['data' => 'data'];
+        $status = 201;
+        $sharedMaxAge = 300;
 
         /** @var AbstractMicroserviceController $controller */
-        $controller = $this->getMockForAbstractClass(AbstractMicroserviceController::class, [300, 'v1']);
+        $controller = $this->getMockForAbstractClass(AbstractMicroserviceController::class, [$sharedMaxAge, 'v1']);
 
-        $container = $this->createMock(ContainerInterface::class);
-        $controller->setContainer($container);
+        $response = $controller->getJsonResponse($data, $status, [], $controller->getSharedMaxAge());
 
-        $controllerResponse = $controller->getJsonResponse($data, 201);
-
-        self::assertJsonStringEqualsJsonString(\json_encode($data), (string) $controllerResponse->getContent());
-        self::assertSame(201, $controllerResponse->getStatusCode());
-        self::assertSame(300, $controllerResponse->getMaxAge());
+        self::assertJsonStringEqualsJsonString('{"data": "data"}', (string) $response->getContent());
+        self::assertSame(201, $response->getStatusCode());
+        self::assertContains("public, s-maxage={$sharedMaxAge}", $response->headers->all()['cache-control']);
+        self::assertSame($sharedMaxAge, $response->getMaxAge());
     }
 
     /**

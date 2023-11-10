@@ -9,12 +9,9 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Vocento\MicroserviceBundle\Controller;
 
 use Assert\Assertion;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as FrameworkAbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -22,15 +19,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * @author Arquitectura <arquitectura@vocento.com>
  *
- * @deprecated since version 5.2, use Vocento\MicroserviceBundle\Controller\AbstractMicroserviceController instead.
+ * @deprecated since version 5.1, use Vocento\MicroserviceBundle\Controller\AbstractMicroserviceController instead.
  */
-abstract class AbstractController extends FrameworkAbstractController
+abstract class AbstractController
 {
     /** @var string */
-    protected $version;
+    private $version;
 
-    /** @var int */
-    protected $sharedMaxAge = 0;
+    /** @var int<0, max> */
+    private $sharedMaxAge = 0;
 
     /**
      * AbstractController constructor.
@@ -43,22 +40,22 @@ abstract class AbstractController extends FrameworkAbstractController
         $this->setVersion($version);
     }
 
-    protected function setSharedMaxAge(int $sharedMaxAge): void
+    /**
+     * @throws \InvalidArgumentException when $sharedMaxAge is lower than zero
+     */
+    public function setSharedMaxAge(int $sharedMaxAge): void
     {
-        if ($sharedMaxAge > 0) {
-            $this->sharedMaxAge = $sharedMaxAge;
+        if ($sharedMaxAge < 0) {
+            throw new \InvalidArgumentException('Service shared max age must be zero or greater');
         }
-    }
 
-    protected function getSharedMaxAge(): int
-    {
-        return $this->sharedMaxAge;
+        $this->sharedMaxAge = $sharedMaxAge;
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException when $version does not match version format pattern
      */
-    protected function setVersion(string $version): void
+    private function setVersion(string $version): void
     {
         Assertion::regex($version, '/^v(\d+\.)?(\d+\.)?(\d+)$/');
 
@@ -85,9 +82,34 @@ abstract class AbstractController extends FrameworkAbstractController
      * @param mixed                $data    The response data
      * @param array<string, mixed> $headers
      */
-    public function getJsonResponse($data, int $status = 200, array $headers = []): JsonResponse
+    public function getJsonResponse(
+        $data,
+        int $status = 200,
+        array $headers = [],
+        int $sharedMaxAge = 0
+    ): JsonResponse {
+        $response = new JsonResponse($data, $status, $headers);
+        $response->setEncodingOptions($response->getEncodingOptions() | \JSON_PRESERVE_ZERO_FRACTION);
+        $response->setSharedMaxAge($sharedMaxAge);
+
+        return $response;
+    }
+
+    public function getSharedMaxAge(): int
     {
-        return $this->json($data, $status, $headers)
-            ->setSharedMaxAge($this->sharedMaxAge);
+        return $this->sharedMaxAge;
+    }
+
+    public function getJsonProblemResponse(int $status, string $detail): JsonResponse
+    {
+        $data = [
+            'status' => $status,
+            'title' => JsonResponse::$statusTexts[$status] ?? 'Unknown Error',
+            'message' => $detail,
+        ];
+
+        return new JsonResponse($data, $status, [
+            'Content-Type' => 'application/problem+json',
+        ]);
     }
 }

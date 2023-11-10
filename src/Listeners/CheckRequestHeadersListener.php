@@ -9,8 +9,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Vocento\MicroserviceBundle\Listeners;
 
 use Symfony\Component\HttpKernel\Event\RequestEvent;

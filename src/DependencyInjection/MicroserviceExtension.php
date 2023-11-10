@@ -9,8 +9,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Vocento\MicroserviceBundle\DependencyInjection;
 
 use Composer\Semver\Comparator;
@@ -35,12 +33,17 @@ class MicroserviceExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(\dirname(__DIR__).'/Resources/config/services'));
-
+        $locator = new FileLocator(\dirname(__DIR__).'/Resources/config/services');
+        $loader = new YamlFileLoader($container, $locator);
         $loader->load('controllers.yml');
         $loader->load('listeners.yml');
 
         $configuration = $this->getConfiguration($configs, $container);
+
+        if (null === $configuration) {
+            return;
+        }
+
         $config = $this->processConfiguration($configuration, $configs);
         $versions = $this->normalizeVersions($config['versions']['list']);
         $currentVersion = $this->getCurrentVersion($config['versions']['current'], $versions);

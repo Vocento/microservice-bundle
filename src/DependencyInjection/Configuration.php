@@ -9,8 +9,6 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Vocento\MicroserviceBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -40,11 +38,11 @@ class Configuration implements ConfigurationInterface
                     ->info('Code version')
                     ->defaultValue('unknown')
                 ->end()
-                    ->booleanNode('debug')
+                ->booleanNode('debug')
                     ->info('Enable debug mode')
                     ->defaultFalse()
                 ->end()
-                    ->booleanNode('manage_exceptions')
+                ->booleanNode('manage_exceptions')
                     ->info('Manage exceptions')
                     ->defaultTrue()
                 ->end()

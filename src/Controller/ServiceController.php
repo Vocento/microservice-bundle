@@ -9,12 +9,9 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Vocento\MicroserviceBundle\Controller;
 
 use Assert\Assertion;
-use Assert\AssertionFailedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -22,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * @author Arquitectura <arquitectura@vocento.com>
  */
-final class ServiceController extends AbstractController
+final class ServiceController extends AbstractMicroserviceController
 {
     /** @var string */
     private $codeVersion;
@@ -36,10 +33,14 @@ final class ServiceController extends AbstractController
     /**
      * @param string[] $versions
      *
-     * @throws AssertionFailedException
+     * @throws \InvalidArgumentException
      */
-    public function __construct(string $serviceName, string $codeVersion, array $versions, string $currentVersion)
-    {
+    public function __construct(
+        string $serviceName,
+        string $codeVersion,
+        array $versions,
+        string $currentVersion
+    ) {
         parent::__construct(0, $currentVersion);
 
         $this->setServiceName($serviceName);
@@ -47,6 +48,9 @@ final class ServiceController extends AbstractController
         $this->setCodeVersion($codeVersion);
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     */
     private function setServiceName(string $serviceName): void
     {
         Assertion::notBlank($serviceName);
@@ -57,7 +61,7 @@ final class ServiceController extends AbstractController
     /**
      * @param string[] $versions
      *
-     * @throws AssertionFailedException
+     * @throws \InvalidArgumentException
      */
     private function setVersions(array $versions): void
     {
@@ -67,6 +71,9 @@ final class ServiceController extends AbstractController
         $this->versions = $versions;
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     */
     private function setCodeVersion(string $codeVersion): void
     {
         Assertion::notBlank($codeVersion);
@@ -76,7 +83,7 @@ final class ServiceController extends AbstractController
 
     public function serviceAction(): JsonResponse
     {
-        return new JsonResponse([
+        return $this->getJsonResponse([
             'service' => [
                 'current' => $this->getVersion(),
                 'name' => $this->serviceName,
@@ -88,7 +95,7 @@ final class ServiceController extends AbstractController
 
     public function nameAction(): JsonResponse
     {
-        return new JsonResponse([
+        return $this->getJsonResponse([
             'service' => [
                 'name' => $this->serviceName,
             ],
@@ -97,7 +104,7 @@ final class ServiceController extends AbstractController
 
     public function currentVersionAction(): JsonResponse
     {
-        return new JsonResponse([
+        return $this->getJsonResponse([
             'service' => [
                 'version' => $this->getVersion(),
             ],
@@ -106,7 +113,7 @@ final class ServiceController extends AbstractController
 
     public function versionsAction(): JsonResponse
     {
-        return new JsonResponse([
+        return $this->getJsonResponse([
             'service' => [
                 'current' => $this->getVersion(),
                 'versions' => $this->versions,
