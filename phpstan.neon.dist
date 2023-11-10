@@ -1,6 +1,6 @@
 parameters:
   phpVersion: 70100
-  level: 6
+  level: max
   parallel:
     jobSize: 20
     maximumNumberOfProcesses: 32

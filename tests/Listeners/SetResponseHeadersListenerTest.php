@@ -48,7 +48,7 @@ final class SetResponseHeadersListenerTest extends TestCase
 
     private function createFilteredResponseEvent(bool $isMasterRequest = true, bool $addRequestId = true): ResponseEvent
     {
-        /** @var MockObject|HttpKernelInterface $kernel */
+        /** @var HttpKernelInterface $kernel */
         $kernel = $this->createMock(HttpKernelInterface::class);
         $request = new Request();
 

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Vocento\MicroserviceBundle\Tests\Listeners;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -49,7 +48,7 @@ final class CheckRequestHeadersListenerTest extends TestCase
 
     private function createResponseEvent(bool $isMasterRequest = true): ExceptionEvent
     {
-        /** @var MockObject|HttpKernelInterface $kernel */
+        /** @var HttpKernelInterface $kernel */
         $kernel = $this->createMock(HttpKernelInterface::class);
         $request = new Request();
         $requestType = $isMasterRequest ? HttpKernelInterface::MASTER_REQUEST : HttpKernelInterface::SUB_REQUEST;
