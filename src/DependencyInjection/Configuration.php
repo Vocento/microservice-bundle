@@ -22,14 +22,10 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('microservice');
 
-        /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
@@ -71,7 +67,6 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->scalarNode('current')->defaultValue('latest')->end()
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 }

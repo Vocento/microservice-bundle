@@ -11,6 +11,7 @@
 
 namespace Vocento\MicroserviceBundle\Listeners;
 
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Vocento\RequestId;
 
 /**
@@ -31,20 +32,25 @@ final class CheckRequestHeadersListener
         $this->serviceName = $serviceName;
     }
 
-    public function onKernelRequest($event): void
+    public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (\method_exists($event, 'isMainRequest')) {
+            $isMainRequest = $event->isMainRequest();
+        } else {
+            $isMainRequest = $event->isMasterRequest();
+        }
+
+        if (!$isMainRequest) {
             return;
         }
 
-        $eventRequest = $event->getRequest();
+        $request = $event->getRequest();
 
-        $eventRequest->headers->set('service-name', $this->serviceName);
-
-        $requestId = $eventRequest->headers->get('request-id');
-
-        if (null === $requestId) {
-            $eventRequest->headers->set('request-id', RequestId::create());
+        if (null !== $request->headers->get('request-id')) {
+            return;
         }
+
+        $request->headers->set('request-id', RequestId::create()->getId());
+        $request->headers->set('service-name', $this->serviceName);
     }
 }

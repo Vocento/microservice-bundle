@@ -22,18 +22,17 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.2"
-          - "7.3"
+          - "7.1"
           - "7.4"
         dependencies: [locked]
         os: [ubuntu-latest]
         experimental: [false]
         include:
-          - php-version: "7.2"
+          - php-version: "7.1"
             dependencies: highest
             os: ubuntu-latest
             experimental: false
-          - php-version: "7.2"
+          - php-version: "7.4"
             dependencies: lowest
             os: ubuntu-latest
             experimental: false

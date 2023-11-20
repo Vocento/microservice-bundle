@@ -13,6 +13,7 @@ namespace Vocento\MicroserviceBundle\Listeners;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
@@ -39,11 +40,9 @@ final class ExceptionListener
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent|\Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
-     *
      * @throws \InvalidArgumentException
      */
-    public function onKernelException($event): void
+    public function onKernelException(ExceptionEvent $event): void
     {
         if ($this->debug || !$this->manageExceptions) {
             return;

@@ -11,6 +11,7 @@
 
 namespace Vocento\MicroserviceBundle\Listeners;
 
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Vocento\RequestId;
 
 /**
@@ -20,10 +21,7 @@ use Vocento\RequestId;
  */
 final class SetResponseHeadersListener
 {
-    /**
-     * @param \Symfony\Component\HttpKernel\Event\ResponseEvent|\Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
-     */
-    public function onKernelResponse($event): void
+    public function onKernelResponse(ResponseEvent $event): void
     {
         if (\method_exists($event, 'isMainRequest')) {
             $isMainRequest = $event->isMainRequest();

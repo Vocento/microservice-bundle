@@ -12,26 +12,27 @@
 namespace Vocento\MicroserviceBundle\Controller;
 
 use Assert\Assertion;
-use Assert\AssertionFailedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class AbstractController.
  *
  * @author Arquitectura <arquitectura@vocento.com>
+ *
+ * @deprecated since version 5.1, use Vocento\MicroserviceBundle\Controller\AbstractMicroserviceController instead.
  */
 abstract class AbstractController
 {
     /** @var string */
     private $version;
 
-    /** @var int */
+    /** @var int<0, max> */
     private $sharedMaxAge = 0;
 
     /**
      * AbstractController constructor.
      *
-     * @throws AssertionFailedException
+     * @throws \InvalidArgumentException
      */
     public function __construct(int $sharedMaxAge, string $version)
     {
@@ -39,15 +40,20 @@ abstract class AbstractController
         $this->setVersion($version);
     }
 
-    private function setSharedMaxAge(int $sharedMaxAge): void
+    /**
+     * @throws \InvalidArgumentException when $sharedMaxAge is lower than zero
+     */
+    public function setSharedMaxAge(int $sharedMaxAge): void
     {
-        if ($sharedMaxAge > 0) {
-            $this->sharedMaxAge = $sharedMaxAge;
+        if ($sharedMaxAge < 0) {
+            throw new \InvalidArgumentException('Service shared max age must be zero or greater');
         }
+
+        $this->sharedMaxAge = $sharedMaxAge;
     }
 
     /**
-     * @throws AssertionFailedException
+     * @throws \InvalidArgumentException when $version does not match version format pattern
      */
     private function setVersion(string $version): void
     {
@@ -73,7 +79,7 @@ abstract class AbstractController
     }
 
     /**
-     * @param mixed                $data
+     * @param mixed                $data    The response data
      * @param array<string, mixed> $headers
      */
     public function getJsonResponse(
@@ -89,8 +95,21 @@ abstract class AbstractController
         return $response;
     }
 
-    protected function getSharedMaxAge(): int
+    public function getSharedMaxAge(): int
     {
         return $this->sharedMaxAge;
+    }
+
+    public function getJsonProblemResponse(int $status, string $detail): JsonResponse
+    {
+        $data = [
+            'status' => $status,
+            'title' => JsonResponse::$statusTexts[$status] ?? 'Unknown Error',
+            'message' => $detail,
+        ];
+
+        return new JsonResponse($data, $status, [
+            'Content-Type' => 'application/problem+json',
+        ]);
     }
 }

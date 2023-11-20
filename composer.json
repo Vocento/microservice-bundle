@@ -3,6 +3,7 @@
     "type": "bundle",
     "license": "proprietary",
     "description": "Base bundle for Microservice projects",
+    "homepage": "https://github.com/Vocento/microservice-bundle",
     "keywords": [
         "bundle",
         "microservice"
@@ -27,15 +28,15 @@
         "php": "^7.1",
         "ext-json": "*",
         "beberlei/assert": "^2.6 || ^3.0",
-        "composer/semver": "~1.4",
+        "composer/semver": "^1.0 || ^2.0 || ^3.0",
         "monolog/monolog": "^1.22 || ^2.0",
-        "symfony/framework-bundle": "^3.0 || ^4.0 || ^5.0",
+        "symfony/framework-bundle": "^4.4 || ^5.4",
         "vocento/request-id": "^1.0"
     },
     "require-dev": {
-        "jms/serializer": "~1.1",
-        "matthiasnoback/symfony-dependency-injection-test": "^2.0 || ^3.0 || ^4.0",
-        "phpunit/phpunit": "^6.0 || ^7.0 || ^8.0"
+        "jms/serializer": "^1.14 || ^2.3 || ^3.28",
+        "matthiasnoback/symfony-dependency-injection-test": "^3.0 || ^4.0",
+        "phpunit/phpunit": "^7.5 || ^9.5"
     },
     "config": {
         "bin-dir": "bin"

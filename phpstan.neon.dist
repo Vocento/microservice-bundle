@@ -1,0 +1,10 @@
+parameters:
+  phpVersion: 70100
+  level: max
+  parallel:
+    jobSize: 20
+    maximumNumberOfProcesses: 32
+    minimumNumberOfJobsPerProcess: 2
+  paths:
+    - src
+    - tests

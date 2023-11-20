@@ -11,15 +11,8 @@
 
 declare(strict_types=1);
 
-namespace Vocento\MicroserviceBundle;
+namespace Vocento\MicroserviceBundle\Controller;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-
-/**
- * Class MicroserviceBundle.
- *
- * @author Arquitectura <arquitectura@vocento.com>
- */
-class MicroserviceBundle extends Bundle
+abstract class AbstractMicroserviceController extends AbstractController
 {
 }

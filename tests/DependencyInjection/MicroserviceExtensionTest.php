@@ -9,9 +9,12 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Vocento\MicroserviceBundle\DependencyInjection\MicroserviceExtension;
 
 /**
@@ -20,18 +23,23 @@ use Vocento\MicroserviceBundle\DependencyInjection\MicroserviceExtension;
  * @author Arquitectura <arquitectura@vocento.com>
  *
  * @covers \Vocento\MicroserviceBundle\DependencyInjection\MicroserviceExtension
+ *
+ * @internal
  */
-class MicroserviceExtensionTest extends AbstractExtensionTestCase
+final class MicroserviceExtensionTest extends AbstractExtensionTestCase
 {
     /**
-     * @dataProvider getConfigurations
+     * @dataProvider provideAfterLoadingTheCorrectParametersHasBeenSetCases
+     *
+     * @param array<string, mixed>                    $configuration
+     * @param array{parameters: array<string, mixed>} $expectated
      */
-    public function testAfterLoadingTheCorrectParametersHasBeenSet(array $configuration, array $expectation): void
+    public function testAfterLoadingTheCorrectParametersHasBeenSet(array $configuration, array $expectated): void
     {
         $this->load($configuration);
 
         // Check parameters exist
-        foreach ($expectation['parameters'] as $parameterName => $expectedParameterValue) {
+        foreach ($expectated['parameters'] as $parameterName => $expectedParameterValue) {
             $this->assertContainerBuilderHasParameter($parameterName, $expectedParameterValue);
         }
 
@@ -44,15 +52,16 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService('vocento.microservice.set_response_request_id_header.listener');
     }
 
-    public function getConfigurations(): array
+    /**
+     * @return \Generator<string, array{array<string, mixed>, array{parameters: array<string, mixed>}}>
+     */
+    public function provideAfterLoadingTheCorrectParametersHasBeenSetCases(): iterable
     {
-        $testCases = [];
-
         /*
          * Case 0
          * Repeated version with all majors and latest
          */
-        $testCases[] = [
+        yield 'Repeated version with all majors and latest' => [
             [
                 'name' => 'test',
                 'code_version' => '96c122f',
@@ -271,7 +280,7 @@ class MicroserviceExtensionTest extends AbstractExtensionTestCase
     }
 
     /**
-     * {@inheritDoc}
+     * @return ExtensionInterface[]
      */
     protected function getContainerExtensions(): array
     {
