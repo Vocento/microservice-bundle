@@ -30,7 +30,7 @@
         "beberlei/assert": "^2.6 || ^3.0",
         "composer/semver": "^1.0 || ^2.0 || ^3.0",
         "monolog/monolog": "^1.22 || ^2.0",
-        "symfony/framework-bundle": "^4.4 || ^5.4",
+        "symfony/framework-bundle": "^4.4 || ^5.4 || ^6.4",
         "vocento/request-id": "^1.0"
     },
     "require-dev": {
