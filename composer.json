@@ -29,13 +29,13 @@
         "ext-json": "*",
         "beberlei/assert": "^2.6 || ^3.0",
         "composer/semver": "^1.0 || ^2.0 || ^3.0",
-        "monolog/monolog": "^1.22 || ^2.0",
-        "symfony/framework-bundle": "^4.4 || ^5.4",
+        "monolog/monolog": "^1.22 || ^2.0 || ^3.0",
+        "symfony/framework-bundle": "^4.4 || ^5.4 || ^6.4",
         "vocento/request-id": "^1.0"
     },
     "require-dev": {
         "jms/serializer": "^1.14 || ^2.3 || ^3.28",
-        "matthiasnoback/symfony-dependency-injection-test": "^3.0 || ^4.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^3.0 || ^4.0 || ^5.0",
         "phpunit/phpunit": "^7.5 || ^9.5"
     },
     "config": {
