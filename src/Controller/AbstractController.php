@@ -86,11 +86,11 @@ abstract class AbstractController
         $data,
         int $status = 200,
         array $headers = [],
-        int $sharedMaxAge = 0
+        ?int $sharedMaxAge = null
     ): JsonResponse {
         $response = new JsonResponse($data, $status, $headers);
         $response->setEncodingOptions($response->getEncodingOptions() | \JSON_PRESERVE_ZERO_FRACTION);
-        $response->setSharedMaxAge($sharedMaxAge);
+        $response->setSharedMaxAge($sharedMaxAge ?? $this->sharedMaxAge);
 
         return $response;
     }
