@@ -100,7 +100,7 @@ class MicroserviceExtension extends Extension
      */
     private function getCurrentVersion(string $currentVersion, array $versions): string
     {
-        if ('latest' !== \strtolower($currentVersion) || 0 === \count($versions)) {
+        if ('latest' !== \strtolower($currentVersion) || [] === $versions) {
             return $currentVersion;
         }
 
