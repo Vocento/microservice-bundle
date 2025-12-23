@@ -21,12 +21,8 @@ use Vocento\RequestId;
  */
 final class CheckRequestHeadersListener
 {
-    /** @var string */
-    private $serviceName;
+    private string $serviceName;
 
-    /**
-     * CheckRequestIdOrCreateListener constructor.
-     */
     public function __construct(string $serviceName)
     {
         $this->serviceName = $serviceName;
@@ -34,11 +30,7 @@ final class CheckRequestHeadersListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (\method_exists($event, 'isMainRequest')) {
-            $isMainRequest = $event->isMainRequest();
-        } else {
-            $isMainRequest = $event->isMasterRequest();
-        }
+        $isMainRequest = $event->isMainRequest();
 
         if (!$isMainRequest) {
             return;

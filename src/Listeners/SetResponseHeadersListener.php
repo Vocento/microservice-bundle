@@ -23,11 +23,7 @@ final class SetResponseHeadersListener
 {
     public function onKernelResponse(ResponseEvent $event): void
     {
-        if (\method_exists($event, 'isMainRequest')) {
-            $isMainRequest = $event->isMainRequest();
-        } else {
-            $isMainRequest = $event->isMasterRequest();
-        }
+        $isMainRequest = $event->isMainRequest();
 
         if (!$isMainRequest) {
             return;

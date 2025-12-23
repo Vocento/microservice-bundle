@@ -21,14 +21,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 final class ServiceController extends AbstractMicroserviceController
 {
-    /** @var string */
-    private $codeVersion;
-
-    /** @var string */
-    private $serviceName;
+    private string $codeVersion;
+    private string $serviceName;
 
     /** @var string[] */
-    private $versions;
+    private array $versions;
 
     /**
      * @param string[] $versions

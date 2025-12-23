@@ -23,14 +23,9 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
  */
 final class ExceptionListener
 {
-    /** @var bool */
-    private $debug;
-
-    /** @var bool */
-    private $manageExceptions;
-
-    /** @var LoggerInterface|null */
-    private $logger;
+    private bool $debug;
+    private bool $manageExceptions;
+    private ?LoggerInterface $logger;
 
     public function __construct(bool $debug = false, bool $manageExceptions = true, LoggerInterface $logger = null)
     {
@@ -48,12 +43,7 @@ final class ExceptionListener
             return;
         }
 
-        if (\method_exists($event, 'getThrowable')) {
-            $exception = $event->getThrowable();
-        } else {
-            $exception = $event->getException();
-        }
-
+        $exception = $event->getThrowable();
         $this->logException($exception);
 
         $response = new Response('', 500);

@@ -21,8 +21,7 @@ use JMS\Serializer\SerializerInterface;
  */
 trait SerializerAwareControllerTrait
 {
-    /** @var SerializerInterface */
-    private $serializer;
+    private ?SerializerInterface $serializer = null;
 
     /**
      * @param object|array|scalar $object
