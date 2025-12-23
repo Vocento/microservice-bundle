@@ -46,12 +46,12 @@ final class CheckRequestHeadersListenerTest extends TestCase
         self::assertSame($this->serviceName, $event->getRequest()->headers->get('service-name'));
     }
 
-    private function createResponseEvent(bool $isMasterRequest = true): ExceptionEvent
+    private function createResponseEvent(bool $isMainRequest = true): ExceptionEvent
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->createMock(HttpKernelInterface::class);
         $request = new Request();
-        $requestType = $isMasterRequest ? HttpKernelInterface::MASTER_REQUEST : HttpKernelInterface::SUB_REQUEST;
+        $requestType = $isMainRequest ? HttpKernelInterface::MAIN_REQUEST : HttpKernelInterface::SUB_REQUEST;
 
         return new ExceptionEvent($kernel, $request, $requestType, new \RuntimeException());
     }

@@ -46,7 +46,7 @@ final class SetResponseHeadersListenerTest extends TestCase
         self::assertNotEmpty($event->getResponse()->headers->get('request-id'));
     }
 
-    private function createFilteredResponseEvent(bool $isMasterRequest = true, bool $addRequestId = true): ResponseEvent
+    private function createFilteredResponseEvent(bool $isMainRequest = true, bool $addRequestId = true): ResponseEvent
     {
         /** @var HttpKernelInterface $kernel */
         $kernel = $this->createMock(HttpKernelInterface::class);
@@ -57,7 +57,7 @@ final class SetResponseHeadersListenerTest extends TestCase
         }
 
         $response = new Response();
-        $requestType = $isMasterRequest ? HttpKernelInterface::MASTER_REQUEST : HttpKernelInterface::SUB_REQUEST;
+        $requestType = $isMainRequest ? HttpKernelInterface::MAIN_REQUEST : HttpKernelInterface::SUB_REQUEST;
 
         return new ResponseEvent($kernel, $request, $requestType, $response);
     }
