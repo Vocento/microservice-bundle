@@ -55,6 +55,7 @@ return (new PhpCsFixer\Config())
         'self_static_accessor' => true,
         'simplified_if_return' => true,
         'php_unit_test_case_static_method_calls' => ['call_type' => 'self'],
+        'blank_line_after_opening_tag' => false,
     ])
     ->setRiskyAllowed(true)
     ->setFinder(

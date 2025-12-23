@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Vocento\MicroserviceBundle\Tests\Listeners;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;

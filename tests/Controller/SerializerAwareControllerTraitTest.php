@@ -70,15 +70,6 @@ final class SerializerAwareControllerTraitTest extends TestCase
         $trait->serialize($object, $version, $groups);
     }
 
-    private function createSerializerMock(): MockObject
-    {
-        $serializerMock = $this->createMock(SerializerInterface::class);
-        $serializerMock->method('serialize')
-            ->willReturn('');
-
-        return $serializerMock;
-    }
-
     /**
      * @return array<array{object|array<string, string>|scalar, string, list<string>}>
      */
@@ -89,5 +80,14 @@ final class SerializerAwareControllerTraitTest extends TestCase
             [['test' => '1'], 'v1', ['group1', 'group2']],
             ['1', 'v1', ['group1', 'group2']],
         ];
+    }
+
+    private function createSerializerMock(): MockObject
+    {
+        $serializerMock = $this->createMock(SerializerInterface::class);
+        $serializerMock->method('serialize')
+            ->willReturn('');
+
+        return $serializerMock;
     }
 }

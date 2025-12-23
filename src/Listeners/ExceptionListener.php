@@ -27,7 +27,7 @@ final class ExceptionListener
     private bool $manageExceptions;
     private ?LoggerInterface $logger;
 
-    public function __construct(bool $debug = false, bool $manageExceptions = true, LoggerInterface $logger = null)
+    public function __construct(bool $debug = false, bool $manageExceptions = true, ?LoggerInterface $logger = null)
     {
         $this->debug = $debug;
         $this->manageExceptions = $manageExceptions;

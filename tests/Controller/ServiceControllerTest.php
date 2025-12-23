@@ -43,6 +43,21 @@ final class ServiceControllerTest extends TestCase
     }
 
     /**
+     * @return \Generator<array{string, string, list<string>, string}>
+     */
+    public function provideInvalidServiceControllerArgumentsShouldThrowExceptionCases(): iterable
+    {
+        yield ['', '', [], ''];
+        yield ['', '', [], 'v1'];
+        yield ['', '', ['v1'], 'v1'];
+        yield ['name', '', [], ''];
+        yield ['name', '', [], 'v1'];
+        yield ['name', '', ['v1'], ''];
+        yield ['name', '', ['v'], 'v1'];
+        yield ['name', '', ['v1'], 'v'];
+    }
+
+    /**
      * @dataProvider validConstructorArguments
      *
      * @param list<string> $versions
@@ -135,21 +150,6 @@ final class ServiceControllerTest extends TestCase
         $response = $controller->currentVersionAction();
 
         self::assertSame(\json_encode(['service' => ['version' => $currentVersion]]), $response->getContent());
-    }
-
-    /**
-     * @return \Generator<array{string, string, list<string>, string}>
-     */
-    public function provideInvalidServiceControllerArgumentsShouldThrowExceptionCases(): iterable
-    {
-        yield ['', '', [], ''];
-        yield ['', '', [], 'v1'];
-        yield ['', '', ['v1'], 'v1'];
-        yield ['name', '', [], ''];
-        yield ['name', '', [], 'v1'];
-        yield ['name', '', ['v1'], ''];
-        yield ['name', '', ['v'], 'v1'];
-        yield ['name', '', ['v1'], 'v'];
     }
 
     /**
