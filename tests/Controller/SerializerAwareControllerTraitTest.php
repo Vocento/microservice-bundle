@@ -73,7 +73,7 @@ final class SerializerAwareControllerTraitTest extends TestCase
     /**
      * @return array<array{object|array<string, string>|scalar, string, list<string>}>
      */
-    public function provideWhenCallingSerializeWithSerializerShouldReturnJsonCases(): iterable
+    public static function provideWhenCallingSerializeWithSerializerShouldReturnJsonCases(): iterable
     {
         return [
             [(object) ['test' => '1'], 'v1', ['group1', 'group2']],

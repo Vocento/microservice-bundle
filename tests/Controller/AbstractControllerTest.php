@@ -40,7 +40,7 @@ final class AbstractControllerTest extends TestCase
     /**
      * @return \Generator<array{string}>
      */
-    public function provideInvalidVersionShouldThrowExceptionCases(): iterable
+    public static function provideInvalidVersionShouldThrowExceptionCases(): iterable
     {
         yield [''];
         yield [' '];
@@ -96,7 +96,7 @@ final class AbstractControllerTest extends TestCase
     /**
      * @return \Generator<array{string, string}>
      */
-    public function validVersions(): iterable
+    public static function validVersions(): iterable
     {
         yield ['v1', 'v1'];
         yield ['v2.0', 'v2'];

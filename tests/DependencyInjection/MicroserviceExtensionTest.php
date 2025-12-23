@@ -55,7 +55,7 @@ final class MicroserviceExtensionTest extends AbstractExtensionTestCase
     /**
      * @return \Generator<string, array{array<string, mixed>, array{parameters: array<string, mixed>}}>
      */
-    public function provideAfterLoadingTheCorrectParametersHasBeenSetCases(): iterable
+    public static function provideAfterLoadingTheCorrectParametersHasBeenSetCases(): iterable
     {
         /*
          * Case 0
