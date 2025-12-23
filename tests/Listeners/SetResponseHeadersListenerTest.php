@@ -32,8 +32,7 @@ use Vocento\MicroserviceBundle\Listeners\SetResponseHeadersListener;
  */
 final class SetResponseHeadersListenerTest extends TestCase
 {
-    /** @var SetResponseHeadersListener */
-    private $listener;
+    private SetResponseHeadersListener $listener;
 
     public function testShouldAddRequestIdIfIsMaster(): void
     {

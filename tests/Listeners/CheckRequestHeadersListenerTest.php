@@ -30,11 +30,8 @@ use Vocento\MicroserviceBundle\Listeners\CheckRequestHeadersListener;
  */
 final class CheckRequestHeadersListenerTest extends TestCase
 {
-    /** @var string */
-    private $serviceName;
-
-    /** @var CheckRequestHeadersListener */
-    private $listener;
+    private string $serviceName;
+    private CheckRequestHeadersListener $listener;
 
     public function testShouldAddServiceNameHeaderIfIsMaster(): void
     {
