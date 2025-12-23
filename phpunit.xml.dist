@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/4.1/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
          backupGlobals="false"
          colors="true"
          bootstrap="vendor/autoload.php"
@@ -11,23 +11,25 @@
     </php>
 
     <logging>
-        <log type="junit" target="build/test/coverage.xml" />
-        <log type="testdox-text" target="build/test/testdox.txt" />
-        <log type="testdox-html" target="build/test/testdox.html" />
-        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true" />
-        <log type="coverage-html" target="build/test/coverage" lowUpperBound="50" highLowerBound="90" />
-        <log type="coverage-clover" target="build/test/clover.xml" />
+        <junit outputFile="build/test/coverage.xml"/>
+        <testdoxText outputFile="build/test/testdox.txt"/>
+        <testdoxHtml outputFile="build/test/testdox.html"/>
     </logging>
+
+    <coverage>
+        <include>
+            <directory>src</directory>
+        </include>
+        <report>
+            <clover outputFile="build/test/clover.xml"/>
+            <html outputDirectory="build/test/coverage" lowUpperBound="50" highLowerBound="90"/>
+            <text outputFile="php://stdout" showUncoveredFiles="true"/>
+        </report>
+    </coverage>
 
     <testsuites>
         <testsuite name="Content Domain Test Suite">
             <directory>tests/</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory>src</directory>
-        </whitelist>
-    </filter>
 </phpunit>
