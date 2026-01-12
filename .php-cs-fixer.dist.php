@@ -3,14 +3,8 @@
 return (new PhpCsFixer\Config())
     ->setUsingCache(false)
     ->setRules([
-        '@PER-CS2.0' => true,
-        '@PER-CS2.0:risky' => true,
-        '@PHP54Migration' => true,
-        '@PHP56Migration:risky' => true,
-        '@PHP71Migration' => true,
-//        '@PHP71Migration:risky' => true,
-        '@PhpCsFixer' => true,
-//        '@PhpCsFixer:risky' => true,
+        '@auto' => true,
+        '@auto:risky' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'strict_comparison' => true,
@@ -55,6 +49,7 @@ return (new PhpCsFixer\Config())
         'self_static_accessor' => true,
         'simplified_if_return' => true,
         'php_unit_test_case_static_method_calls' => ['call_type' => 'self'],
+        'blank_line_after_opening_tag' => false,
     ])
     ->setRiskyAllowed(true)
     ->setFinder(

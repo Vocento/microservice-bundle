@@ -9,6 +9,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\Controller;
 
 use Assert\Assertion;
@@ -23,15 +25,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 abstract class AbstractController
 {
-    /** @var string */
-    private $version;
+    private string $version;
 
     /** @var int<0, max> */
-    private $sharedMaxAge = 0;
+    private int $sharedMaxAge = 0;
 
     /**
-     * AbstractController constructor.
-     *
      * @throws \InvalidArgumentException
      */
     public function __construct(int $sharedMaxAge, string $version)

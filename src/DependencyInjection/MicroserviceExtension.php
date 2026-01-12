@@ -9,6 +9,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\DependencyInjection;
 
 use Composer\Semver\Comparator;
@@ -16,8 +18,8 @@ use Composer\Semver\Semver;
 use Composer\Semver\VersionParser;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * Class MicroserviceExtension.
@@ -98,7 +100,7 @@ class MicroserviceExtension extends Extension
      */
     private function getCurrentVersion(string $currentVersion, array $versions): string
     {
-        if ('latest' !== \strtolower($currentVersion) || 0 === \count($versions)) {
+        if ('latest' !== \strtolower($currentVersion) || [] === $versions) {
             return $currentVersion;
         }
 

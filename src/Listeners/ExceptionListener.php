@@ -9,6 +9,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\Listeners;
 
 use Psr\Log\LoggerInterface;
@@ -23,16 +25,11 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
  */
 final class ExceptionListener
 {
-    /** @var bool */
-    private $debug;
+    private bool $debug;
+    private bool $manageExceptions;
+    private ?LoggerInterface $logger;
 
-    /** @var bool */
-    private $manageExceptions;
-
-    /** @var LoggerInterface|null */
-    private $logger;
-
-    public function __construct(bool $debug = false, bool $manageExceptions = true, LoggerInterface $logger = null)
+    public function __construct(bool $debug = false, bool $manageExceptions = true, ?LoggerInterface $logger = null)
     {
         $this->debug = $debug;
         $this->manageExceptions = $manageExceptions;
@@ -48,12 +45,7 @@ final class ExceptionListener
             return;
         }
 
-        if (\method_exists($event, 'getThrowable')) {
-            $exception = $event->getThrowable();
-        } else {
-            $exception = $event->getException();
-        }
-
+        $exception = $event->getThrowable();
         $this->logException($exception);
 
         $response = new Response('', 500);

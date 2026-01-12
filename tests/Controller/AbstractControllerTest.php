@@ -38,6 +38,29 @@ final class AbstractControllerTest extends TestCase
     }
 
     /**
+     * @return \Generator<array{string}>
+     */
+    public static function provideInvalidVersionShouldThrowExceptionCases(): iterable
+    {
+        yield [''];
+        yield [' '];
+        yield ['a'];
+        yield ['a123'];
+        yield ['1'];
+        yield ['12'];
+        yield ['123'];
+        yield ['1.2'];
+        yield ['1.2.3'];
+        yield ['v1.'];
+        yield ['v1.2.'];
+        yield ['v1..2'];
+        yield ['v1.2.'];
+        yield ['v1.2..3'];
+        yield ['v1.2.3.'];
+        yield ['v1.2.3.4'];
+    }
+
+    /**
      * @dataProvider validVersions
      */
     public function testValidVersionShouldReturnVersion(string $version): void
@@ -70,6 +93,22 @@ final class AbstractControllerTest extends TestCase
         self::assertSame($majorVersion, $controller->getMajorVersion());
     }
 
+    /**
+     * @return \Generator<array{string, string}>
+     */
+    public static function validVersions(): iterable
+    {
+        yield ['v1', 'v1'];
+        yield ['v2.0', 'v2'];
+        yield ['v3.1.0', 'v3'];
+        yield ['v40.12.0', 'v40'];
+        yield ['v500.123.1', 'v500'];
+        yield ['v6000.1234.12', 'v6000'];
+        yield ['v70000.12345.123', 'v70000'];
+        yield ['v800000.123456.1234', 'v800000'];
+        yield ['v9000000.1234567.12345', 'v9000000'];
+    }
+
     public function testShouldCreateJsonResponse(): void
     {
         $data = ['data' => 'data'];
@@ -85,44 +124,5 @@ final class AbstractControllerTest extends TestCase
         self::assertSame(201, $response->getStatusCode());
         self::assertContains("public, s-maxage={$sharedMaxAge}", $response->headers->all()['cache-control']);
         self::assertSame($sharedMaxAge, $response->getMaxAge());
-    }
-
-    /**
-     * @return \Generator<array{string}>
-     */
-    public function provideInvalidVersionShouldThrowExceptionCases(): iterable
-    {
-        yield [''];
-        yield [' '];
-        yield ['a'];
-        yield ['a123'];
-        yield ['1'];
-        yield ['12'];
-        yield ['123'];
-        yield ['1.2'];
-        yield ['1.2.3'];
-        yield ['v1.'];
-        yield ['v1.2.'];
-        yield ['v1..2'];
-        yield ['v1.2.'];
-        yield ['v1.2..3'];
-        yield ['v1.2.3.'];
-        yield ['v1.2.3.4'];
-    }
-
-    /**
-     * @return \Generator<array{string, string}>
-     */
-    public function validVersions(): iterable
-    {
-        yield ['v1', 'v1'];
-        yield ['v2.0', 'v2'];
-        yield ['v3.1.0', 'v3'];
-        yield ['v40.12.0', 'v40'];
-        yield ['v500.123.1', 'v500'];
-        yield ['v6000.1234.12', 'v6000'];
-        yield ['v70000.12345.123', 'v70000'];
-        yield ['v800000.123456.1234', 'v800000'];
-        yield ['v9000000.1234567.12345', 'v9000000'];
     }
 }

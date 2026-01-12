@@ -43,6 +43,21 @@ final class ServiceControllerTest extends TestCase
     }
 
     /**
+     * @return \Generator<array{string, string, list<string>, string}>
+     */
+    public static function provideInvalidServiceControllerArgumentsShouldThrowExceptionCases(): iterable
+    {
+        yield ['', '', [], ''];
+        yield ['', '', [], 'v1'];
+        yield ['', '', ['v1'], 'v1'];
+        yield ['name', '', [], ''];
+        yield ['name', '', [], 'v1'];
+        yield ['name', '', ['v1'], ''];
+        yield ['name', '', ['v'], 'v1'];
+        yield ['name', '', ['v1'], 'v'];
+    }
+
+    /**
      * @dataProvider validConstructorArguments
      *
      * @param list<string> $versions
@@ -140,22 +155,7 @@ final class ServiceControllerTest extends TestCase
     /**
      * @return \Generator<array{string, string, list<string>, string}>
      */
-    public function provideInvalidServiceControllerArgumentsShouldThrowExceptionCases(): iterable
-    {
-        yield ['', '', [], ''];
-        yield ['', '', [], 'v1'];
-        yield ['', '', ['v1'], 'v1'];
-        yield ['name', '', [], ''];
-        yield ['name', '', [], 'v1'];
-        yield ['name', '', ['v1'], ''];
-        yield ['name', '', ['v'], 'v1'];
-        yield ['name', '', ['v1'], 'v'];
-    }
-
-    /**
-     * @return \Generator<array{string, string, list<string>, string}>
-     */
-    public function validConstructorArguments(): iterable
+    public static function validConstructorArguments(): iterable
     {
         yield ['name', 'unknown', ['v1', 'v2', 'v3'], 'v1'];
         yield ['name', '71121dd', ['v1', 'v2', 'v3'], 'v2'];

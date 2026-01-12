@@ -9,6 +9,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Vocento\MicroserviceBundle\Controller;
 
 use JMS\Serializer\SerializationContext;
@@ -21,8 +23,7 @@ use JMS\Serializer\SerializerInterface;
  */
 trait SerializerAwareControllerTrait
 {
-    /** @var SerializerInterface */
-    private $serializer;
+    private ?SerializerInterface $serializer = null;
 
     /**
      * @param object|array|scalar $object

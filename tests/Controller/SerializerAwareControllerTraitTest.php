@@ -70,6 +70,18 @@ final class SerializerAwareControllerTraitTest extends TestCase
         $trait->serialize($object, $version, $groups);
     }
 
+    /**
+     * @return array<array{object|array<string, string>|scalar, string, list<string>}>
+     */
+    public static function provideWhenCallingSerializeWithSerializerShouldReturnJsonCases(): iterable
+    {
+        return [
+            [(object) ['test' => '1'], 'v1', ['group1', 'group2']],
+            [['test' => '1'], 'v1', ['group1', 'group2']],
+            ['1', 'v1', ['group1', 'group2']],
+        ];
+    }
+
     private function createSerializerMock(): MockObject
     {
         $serializerMock = $this->createMock(SerializerInterface::class);
@@ -77,17 +89,5 @@ final class SerializerAwareControllerTraitTest extends TestCase
             ->willReturn('');
 
         return $serializerMock;
-    }
-
-    /**
-     * @return array<array{object|array<string, string>|scalar, string, list<string>}>
-     */
-    public function provideWhenCallingSerializeWithSerializerShouldReturnJsonCases(): iterable
-    {
-        return [
-            [(object) ['test' => '1'], 'v1', ['group1', 'group2']],
-            [['test' => '1'], 'v1', ['group1', 'group2']],
-            ['1', 'v1', ['group1', 'group2']],
-        ];
     }
 }
